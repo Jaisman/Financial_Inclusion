@@ -259,11 +259,9 @@ const ProfilePage = () => {
           <div className="flex items-center justify-between mb-4">
             <div className="flex items-center space-x-2">
               <CheckCircle className="w-5 h-5 text-green-400" />
-              <h3 className="text-lg font-semibold text-gray-200">Profile Completion</h3>
+              
             </div>
-            <span className="text-2xl font-bold bg-gradient-to-r from-green-400 to-emerald-400 bg-clip-text text-transparent">
-              {completion}%
-            </span>
+            
           </div>
           <div className="bg-slate-700 rounded-full h-3 overflow-hidden">
             <div

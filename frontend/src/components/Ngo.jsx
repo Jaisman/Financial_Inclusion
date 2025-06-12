@@ -1084,25 +1084,25 @@ export default function NGOPage() {
             </div>
           </div>
 
-      {/* Program Details Modal */}
-      {selectedProgram && (
-        <div className="fixed inset-0 bg-black/70 backdrop-blur-sm flex items-center justify-center p-4 z-50">
-          <div className="bg-gradient-to-br from-slate-800 to-slate-900 rounded-lg max-w-md w-full p-6 border border-slate-700 shadow-2xl">
-            <div className="flex items-center justify-between mb-4">
-              <h3 className="text-lg font-semibold text-white">{selectedProgram.title}</h3>
-              <button 
-                onClick={() => setSelectedProgram(null)}
-                className="text-gray-400 hover:text-white p-1 rounded-lg hover:bg-slate-700/50 transition-colors duration-200"
-              >
-                <X className="w-5 h-5" />
-              </button>
+          {/* Contact Section */}
+          <div className="mt-8 bg-gradient-to-r from-blue-600 via-indigo-700 to-purple-800 text-white rounded-3xl p-8 text-center">
+            <div className="bg-white bg-opacity-20 backdrop-blur-sm rounded-full p-4 w-16 h-16 mx-auto mb-6">
+              <Heart className="w-8 h-8 text-white" />
             </div>
-            <p className="text-gray-300 mb-4">{selectedProgram.details}</p>
-            <div className="flex items-center justify-between">
-              <span className="text-sm font-medium text-green-400">{selectedProgram.impact}</span>
-              <button className="bg-gradient-to-r from-blue-500 to-purple-600 text-white px-4 py-2 rounded-lg text-sm hover:from-blue-600 hover:to-purple-700 transition-all duration-300">
-                Get Involved
-              </button>
+            <h2 className="text-3xl font-bold mb-4">Join Our Mission</h2>
+            <p className="text-xl text-blue-100 mb-8 max-w-2xl mx-auto">
+              Partner with us to expand financial inclusion and create opportunities for underserved communities
+            </p>
+            
+            <div className="flex flex-col sm:flex-row justify-center items-center space-y-4 sm:space-y-0 sm:space-x-8 mb-8">
+              <div className="flex items-center text-blue-100 hover:text-white transition-colors duration-300 cursor-pointer">
+                <Mail className="w-5 h-5 mr-2" />
+                partnerships@securebank.com
+              </div>
+              <div className="flex items-center text-blue-100 hover:text-white transition-colors duration-300 cursor-pointer">
+                <Phone className="w-5 h-5 mr-2" />
+                +91 98765 43210
+              </div>
             </div>
             
             <button className="bg-white text-blue-600 px-8 py-3 rounded-xl font-semibold hover:bg-blue-50 transition-all duration-300 hover:scale-105 shadow-lg">
