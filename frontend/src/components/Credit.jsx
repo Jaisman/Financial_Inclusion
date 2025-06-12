@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import ReactMarkdown from 'react-markdown';
 import { 
   TrendingUp, 
   Brain, 
@@ -16,43 +17,182 @@ import {
   ArrowUp,
   ArrowDown,
   Info,
-  Sparkles
+  Sparkles,
+  Volume2,
+  VolumeX,
+  BarChart2
 } from 'lucide-react';
 
 const AICreditScoreInsights = () => {
   const [activeTab, setActiveTab] = useState('overview');
-  const [simulatorData, setSimulatorData] = useState({
-    utilityPayments: 85,
-    rentPayments: 90,
-    mobileRecharges: 75,
-    employmentStability: 80
-  });
   const [animatedScore, setAnimatedScore] = useState(0);
-  const targetScore = 742;
+  const [targetScore, setTargetScore] = useState(0);
+  const [explanation, setExplanation] = useState('');
+  const [shapValues, setShapValues] = useState([]);
+  const [isPlaying, setIsPlaying] = useState(false);
+  const [audio] = useState(new Audio());
+  const [isLoadingAudio, setIsLoadingAudio] = useState(false);
+
+  // Sample user data for testing
+  const SAMPLE_USER = {
+    age: 32,
+    employment_status: "self-employed",
+    monthly_income: 25000,
+    utility_bill_payment_history: 78.5,
+    rental_payment_history: 82.0,
+    mobile_recharge_frequency: 3,
+    mobile_data_usage: 5.5,
+    education_level: "Graduate",
+    financial_literacy_score: 6,
+    loan_repayment_history: 65.0,
+    region: "semi-urban"
+  };
+
+  // Fetch credit score on component mount
+  useEffect(() => {
+    const fetchCreditScore = async () => {
+      try {
+        const response = await fetch('http://localhost:5000/predict', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+            'Accept': 'application/json'
+          },
+          body: JSON.stringify(SAMPLE_USER)
+        });
+        
+        const data = await response.json();
+        if (data.status === 'success') {
+          setTargetScore(data.credit_score);
+        } else {
+          console.error('Error fetching credit score:', data);
+        }
+      } catch (error) {
+        console.error('Error fetching credit score:', error);
+      }
+    };
+    fetchCreditScore();
+  }, []);
 
   // Animate score on load
   useEffect(() => {
     const interval = setInterval(() => {
       setAnimatedScore(prev => {
         if (prev < targetScore) {
-          return Math.min(prev + 15, targetScore);
+          return Math.min(prev + 0.15, targetScore);
         }
         clearInterval(interval);
         return prev;
       });
     }, 50);
     return () => clearInterval(interval);
+  }, [targetScore]);
+
+  // Fetch explanation on component mount
+  useEffect(() => {
+    const fetchExplanation = async () => {
+      try {
+        console.log('Fetching explanation...');
+        const response = await fetch('http://localhost:5000/interpret', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+            'Accept': 'application/json'
+          },
+          body: JSON.stringify(SAMPLE_USER)
+        });
+        
+        console.log('Response status:', response.status);
+        const data = await response.json();
+        console.log('Response data:', data);
+        
+        if (data.status === 'success') {
+          setExplanation(data.explanation);
+          // Update audio source
+          audio.src = `http://localhost:5000/audio?t=${new Date().getTime()}`;
+        } else {
+          console.error('Error in response:', data);
+          setExplanation('Unable to load explanation. Please try again later.');
+        }
+      } catch (error) {
+        console.error('Error fetching explanation:', error);
+        setExplanation('Unable to load explanation. Please try again later.');
+      }
+    };
+    fetchExplanation();
   }, []);
 
-  const handleSimulatorChange = (factor, value) => {
-    setSimulatorData(prev => ({ ...prev, [factor]: value }));
-  };
+  // Fetch SHAP values on component mount
+  useEffect(() => {
+    const fetchShapValues = async () => {
+      try {
+        console.log('Fetching SHAP values...');
+        const response = await fetch('http://localhost:5000/explain', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+            'Accept': 'application/json'
+          },
+          body: JSON.stringify(SAMPLE_USER)
+        });
+        
+        const data = await response.json();
+        console.log('SHAP values response:', data);
+        
+        if (data.status === 'success') {
+          // Transform the data to match our expected format
+          const transformedData = Object.entries(data.shap_values).map(([feature, data]) => ({
+            feature: feature.split('_').map(word => word.charAt(0).toUpperCase() + word.slice(1)).join(' '),
+            value: data.shap
+          }));
+          setShapValues(transformedData);
+        } else {
+          console.error('Error fetching SHAP values:', data);
+        }
+      } catch (error) {
+        console.error('Error fetching SHAP values:', error);
+      }
+    };
+    fetchShapValues();
+  }, []);
 
-  const calculateSimulatedScore = () => {
-    const { utilityPayments, rentPayments, mobileRecharges, employmentStability } = simulatorData;
-    const baseScore = 650;
-    const impact = (utilityPayments + rentPayments + mobileRecharges + employmentStability) / 4;
-    return Math.round(baseScore + (impact - 50) * 2);
+  const toggleAudio = async () => {
+    if (isPlaying) {
+      audio.pause();
+      audio.currentTime = 0;
+      setIsPlaying(false);
+    } else {
+      try {
+        setIsLoadingAudio(true);
+        const response = await fetch('http://localhost:5000/text-to-speech', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({ text: explanation })
+        });
+
+        if (!response.ok) {
+          throw new Error('Failed to generate audio');
+        }
+
+        const blob = await response.blob();
+        const audioUrl = URL.createObjectURL(blob);
+        audio.src = audioUrl;
+        
+        audio.onended = () => {
+          setIsPlaying(false);
+          URL.revokeObjectURL(audioUrl);
+        };
+
+        await audio.play();
+        setIsPlaying(true);
+      } catch (error) {
+        console.error('Error playing audio:', error);
+      } finally {
+        setIsLoadingAudio(false);
+      }
+    }
   };
 
   const factors = [
@@ -64,47 +204,79 @@ const AICreditScoreInsights = () => {
     { name: 'Banking Behavior', weight: 10, score: 88, icon: BarChart3, color: 'bg-pink-500' }
   ];
 
-  const aiInsights = [
-    {
-      type: 'improvement',
-      title: 'Improve Mobile Payment Consistency',
-      description: 'Your mobile recharge pattern shows 3 missed payments. Setting up auto-recharge could boost your score by 15-20 points.',
-      impact: '+18 points',
-      urgency: 'high',
-      icon: Smartphone
-    },
-    {
-      type: 'opportunity',
-      title: 'Optimize Utility Payment Timing',
-      description: 'Paying utilities 2-3 days before due date instead of on due date could improve your payment behavior score.',
-      impact: '+8 points',
-      urgency: 'medium',
-      icon: Home
-    },
-    {
-      type: 'strength',
-      title: 'Excellent Rent Payment History',
-      description: 'Your consistent rent payments are your strongest factor. This reliability pattern positively impacts all other scores.',
-      impact: 'Stable',
-      urgency: 'low',
-      icon: CreditCard
-    },
-    {
-      type: 'alert',
-      title: 'Digital Engagement Opportunity',
-      description: 'Increasing your digital transaction frequency could enhance your digital footprint score significantly.',
-      impact: '+12 points',
-      urgency: 'medium',
-      icon: Zap
-    }
-  ];
-
   const tabs = [
     { id: 'overview', label: 'Score Overview', icon: BarChart3 },
-    { id: 'factors', label: 'Score Factors', icon: Target },
-    { id: 'simulator', label: 'What-If Simulator', icon: Calculator },
-    { id: 'insights', label: 'Einstein AI Insights', icon: Brain }
+    { id: 'factors', label: 'Score Factors', icon: Target }
   ];
+
+  const renderShapBarGraph = () => {
+    console.log('Current SHAP values:', shapValues);
+    
+    if (!shapValues || shapValues.length === 0) {
+      console.log('No SHAP values available');
+      return (
+        <div className="mt-6 bg-gradient-to-br from-slate-800/50 to-slate-900/50 rounded-xl p-6 backdrop-blur-sm border border-slate-700/50">
+          <div className="flex items-center space-x-2 mb-4">
+            <BarChart2 className="w-5 h-5 text-blue-400" />
+            <h3 className="text-lg font-semibold text-gray-200">Feature Importance Analysis</h3>
+          </div>
+          <div className="text-center text-gray-400">
+            Loading feature importance data...
+          </div>
+        </div>
+      );
+    }
+
+    const maxValue = Math.max(...shapValues.map(v => Math.abs(v.value)));
+    
+    return (
+      <div className="mt-6 bg-gradient-to-br from-slate-800/50 to-slate-900/50 rounded-xl p-6 backdrop-blur-sm border border-slate-700/50">
+        <div className="flex items-center space-x-2 mb-4">
+          <BarChart2 className="w-5 h-5 text-blue-400" />
+          <h3 className="text-lg font-semibold text-gray-200">Feature Importance Analysis</h3>
+        </div>
+        <div className="space-y-4">
+          {shapValues.map((item, index) => {
+            const percentage = (Math.abs(item.value) / maxValue) * 100;
+            const isPositive = item.value > 0;
+            
+            return (
+              <div key={index} className="space-y-2">
+                <div className="flex justify-between items-center">
+                  <span className="text-sm font-medium text-gray-300">{item.feature}</span>
+                  <span className={`text-sm font-semibold ${isPositive ? 'text-green-400' : 'text-red-400'}`}>
+                    {item.value.toFixed(3)}
+                  </span>
+                </div>
+                <div className="h-2 bg-slate-700 rounded-full overflow-hidden">
+                  <div
+                    className={`h-full rounded-full transition-all duration-500 ${
+                      isPositive ? 'bg-gradient-to-r from-green-500 to-green-400' : 'bg-gradient-to-r from-red-500 to-red-400'
+                    }`}
+                    style={{
+                      width: `${percentage}%`,
+                      marginLeft: isPositive ? '0' : 'auto',
+                      marginRight: isPositive ? 'auto' : '0'
+                    }}
+                  />
+                </div>
+              </div>
+            );
+          })}
+        </div>
+        <div className="mt-4 flex items-center justify-center space-x-4 text-sm text-gray-400">
+          <div className="flex items-center space-x-1">
+            <div className="w-3 h-3 rounded-full bg-green-500"></div>
+            <span>Positive Impact</span>
+          </div>
+          <div className="flex items-center space-x-1">
+            <div className="w-3 h-3 rounded-full bg-red-500"></div>
+            <span>Negative Impact</span>
+          </div>
+        </div>
+      </div>
+    );
+  };
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-slate-900 via-blue-900 to-indigo-900 text-white">
@@ -148,14 +320,14 @@ const AICreditScoreInsights = () => {
           {activeTab === 'overview' && (
             <div className="grid lg:grid-cols-3 gap-8">
               {/* Main Score Card */}
-              <div className="lg:col-span-2 bg-gradient-to-br from-slate-800 to-slate-900 rounded-3xl p-8 shadow-2xl border border-slate-700">
+              <div className="lg:col-span-3 bg-gradient-to-br from-slate-800 to-slate-900 rounded-3xl p-8 shadow-2xl border border-slate-700">
                 <div className="text-center mb-8">
                   <h2 className="text-2xl font-bold mb-4 text-gray-200">Your AI Credit Score</h2>
                   <div className="relative">
                     <div className="text-6xl font-bold text-transparent bg-gradient-to-r from-green-400 to-blue-500 bg-clip-text mb-2">
-                      {animatedScore}
+                      {animatedScore.toFixed(2)}
                     </div>
-                    <div className="text-lg text-gray-400">out of 850</div>
+                    <div className="text-lg text-gray-400">out of 10</div>
                     <div className="mt-4 flex items-center justify-center space-x-2">
                       <div className="px-4 py-2 bg-green-500/20 rounded-full border border-green-500/30">
                         <span className="text-green-400 font-semibold">Good Score</span>
@@ -167,30 +339,8 @@ const AICreditScoreInsights = () => {
                   </div>
                 </div>
 
-                {/* Score Comparison */}
-                <div className="bg-slate-700/30 rounded-2xl p-6 mb-6">
-                  <h3 className="text-xl font-bold mb-4 text-gray-200">Score Comparison</h3>
-                  <div className="space-y-4">
-                    <div className="flex justify-between items-center">
-                      <span className="text-gray-300">Traditional Credit Score</span>
-                      <span className="text-orange-400 font-semibold">680</span>
-                    </div>
-                    <div className="flex justify-between items-center">
-                      <span className="text-gray-300">AI Alternative Score</span>
-                      <span className="text-green-400 font-semibold">742</span>
-                    </div>
-                    <div className="flex justify-between items-center pt-2 border-t border-slate-600">
-                      <span className="text-gray-300 font-semibold">Improvement</span>
-                      <span className="text-blue-400 font-semibold flex items-center">
-                        <ArrowUp size={16} className="mr-1" />
-                        +62 points
-                      </span>
-                    </div>
-                  </div>
-                </div>
-
                 {/* Score Breakdown */}
-                <div className="grid grid-cols-2 gap-4">
+                <div className="grid grid-cols-2 gap-4 mb-8">
                   <div className="bg-slate-700/30 rounded-xl p-4 text-center">
                     <div className="text-2xl font-bold text-blue-400">85%</div>
                     <div className="text-sm text-gray-400">Payment Reliability</div>
@@ -200,32 +350,56 @@ const AICreditScoreInsights = () => {
                     <div className="text-sm text-gray-400">Financial Stability</div>
                   </div>
                 </div>
-              </div>
 
-              {/* Quick Insights */}
-              <div className="space-y-6">
-                <div className="bg-gradient-to-br from-green-800 to-emerald-900 rounded-2xl p-6 border border-green-700/50">
-                  <div className="flex items-center space-x-3 mb-3">
-                    <TrendingUp className="text-green-400" size={24} />
-                    <h3 className="text-lg font-bold text-green-200">Strong Upward Trend</h3>
+                {/* Explanation Section */}
+                <div className="bg-gradient-to-br from-slate-800/50 to-slate-900/50 rounded-xl p-6 backdrop-blur-sm border border-slate-700/50">
+                  <div className="flex items-start justify-between mb-4">
+                    <div className="flex-1">
+                      <div className="flex items-center space-x-2 mb-3">
+                        <Info className="w-5 h-5 text-blue-400" />
+                        <h3 className="text-lg font-semibold text-gray-200">AI-Powered Explanation</h3>
+                      </div>
+                      <div className="prose prose-invert max-w-none">
+                        <ReactMarkdown
+                          components={{
+                            p: ({node, ...props}) => <p className="text-gray-300 leading-relaxed mb-4" {...props} />,
+                            strong: ({node, ...props}) => <strong className="text-blue-400 font-semibold" {...props} />,
+                            em: ({node, ...props}) => <em className="text-purple-400 italic" {...props} />,
+                            ul: ({node, ...props}) => <ul className="list-disc list-inside space-y-2 text-gray-300" {...props} />,
+                            ol: ({node, ...props}) => <ol className="list-decimal list-inside space-y-2 text-gray-300" {...props} />,
+                            li: ({node, ...props}) => <li className="text-gray-300" {...props} />,
+                            h1: ({node, ...props}) => <h1 className="text-2xl font-bold text-white mb-4" {...props} />,
+                            h2: ({node, ...props}) => <h2 className="text-xl font-bold text-white mb-3" {...props} />,
+                            h3: ({node, ...props}) => <h3 className="text-lg font-bold text-white mb-2" {...props} />,
+                            blockquote: ({node, ...props}) => (
+                              <blockquote className="border-l-4 border-blue-500 pl-4 italic text-gray-300 my-4" {...props} />
+                            ),
+                            code: ({node, ...props}) => (
+                              <code className="bg-slate-700/50 px-2 py-1 rounded text-blue-300 font-mono text-sm" {...props} />
+                            ),
+                          }}
+                        >
+                          {explanation}
+                        </ReactMarkdown>
+                      </div>
+                    </div>
+                    <button
+                      onClick={toggleAudio}
+                      disabled={isLoadingAudio}
+                      className={`p-3 rounded-full bg-blue-500/20 hover:bg-blue-500/30 transition-colors duration-200 ml-4 flex-shrink-0 ${
+                        isLoadingAudio ? 'opacity-50 cursor-not-allowed' : ''
+                      }`}
+                      title={isLoadingAudio ? "Loading audio..." : isPlaying ? "Stop audio" : "Play audio"}
+                    >
+                      {isLoadingAudio ? (
+                        <div className="w-5 h-5 border-2 border-blue-400 border-t-transparent rounded-full animate-spin" />
+                      ) : isPlaying ? (
+                        <VolumeX className="w-5 h-5 text-blue-400" />
+                      ) : (
+                        <Volume2 className="w-5 h-5 text-blue-400" />
+                      )}
+                    </button>
                   </div>
-                  <p className="text-green-100 text-sm">Your score has improved by 28 points in the last 3 months due to consistent payment behavior.</p>
-                </div>
-
-                <div className="bg-gradient-to-br from-blue-800 to-indigo-900 rounded-2xl p-6 border border-blue-700/50">
-                  <div className="flex items-center space-x-3 mb-3">
-                    <Eye className="text-blue-400" size={24} />
-                    <h3 className="text-lg font-bold text-blue-200">AI Advantage</h3>
-                  </div>
-                  <p className="text-blue-100 text-sm">Our AI model considers 40+ non-traditional factors that traditional scoring misses.</p>
-                </div>
-
-                <div className="bg-gradient-to-br from-purple-800 to-pink-900 rounded-2xl p-6 border border-purple-700/50">
-                  <div className="flex items-center space-x-3 mb-3">
-                    <Sparkles className="text-purple-400" size={24} />
-                    <h3 className="text-lg font-bold text-purple-200">Next Milestone</h3>
-                  </div>
-                  <p className="text-purple-100 text-sm">You're 18 points away from reaching "Excellent" credit tier (760+).</p>
                 </div>
               </div>
             </div>
@@ -236,175 +410,45 @@ const AICreditScoreInsights = () => {
             <div className="bg-gradient-to-br from-slate-800 to-slate-900 rounded-3xl p-8 shadow-2xl border border-slate-700">
               <h2 className="text-2xl font-bold mb-6 text-gray-200">Credit Score Factors</h2>
               <div className="space-y-6">
-                {factors.map((factor, index) => {
-                  const IconComponent = factor.icon;
+                {shapValues.map((item, index) => {
+                  const isPositive = item.value > 0;
+                  const score = Math.abs(item.value) * 100; // Convert SHAP value to a 0-100 scale
+                  const color = isPositive ? 'bg-green-500' : 'bg-red-500';
+                  const IconComponent = index % 6 === 0 ? Home :
+                                      index % 6 === 1 ? CreditCard :
+                                      index % 6 === 2 ? Smartphone :
+                                      index % 6 === 3 ? Briefcase :
+                                      index % 6 === 4 ? Shield :
+                                      BarChart3;
+
                   return (
                     <div key={index} className="bg-slate-700/30 rounded-xl p-6 hover:bg-slate-700/50 transition-all duration-200">
                       <div className="flex items-center justify-between mb-4">
                         <div className="flex items-center space-x-3">
-                          <div className={`p-2 ${factor.color} rounded-lg`}>
+                          <div className={`p-2 ${color} rounded-lg`}>
                             <IconComponent className="text-white" size={20} />
                           </div>
                           <div>
-                            <h3 className="font-semibold text-gray-200">{factor.name}</h3>
-                            <p className="text-sm text-gray-400">Weight: {factor.weight}%</p>
+                            <h3 className="font-semibold text-gray-200">{item.feature}</h3>
+                            <p className="text-sm text-gray-400">Impact: {isPositive ? 'Positive' : 'Negative'}</p>
                           </div>
                         </div>
                         <div className="text-right">
-                          <div className="text-xl font-bold text-gray-200">{factor.score}/100</div>
-                          <div className={`text-sm ${factor.score >= 80 ? 'text-green-400' : factor.score >= 60 ? 'text-yellow-400' : 'text-red-400'}`}>
-                            {factor.score >= 80 ? 'Excellent' : factor.score >= 60 ? 'Good' : 'Needs Improvement'}
+                          <div className="text-xl font-bold text-gray-200">{score.toFixed(1)}%</div>
+                          <div className={`text-sm ${isPositive ? 'text-green-400' : 'text-red-400'}`}>
+                            {isPositive ? 'Improves Score' : 'Reduces Score'}
                           </div>
                         </div>
                       </div>
                       <div className="w-full bg-slate-600 rounded-full h-2">
                         <div 
-                          className={`h-2 rounded-full ${factor.color} transition-all duration-500`}
-                          style={{ width: `${factor.score}%` }}
+                          className={`h-2 rounded-full ${color} transition-all duration-500`}
+                          style={{ width: `${score}%` }}
                         ></div>
                       </div>
                     </div>
                   );
                 })}
-              </div>
-            </div>
-          )}
-
-          {/* Simulator Tab */}
-          {activeTab === 'simulator' && (
-            <div className="bg-gradient-to-br from-slate-800 to-slate-900 rounded-3xl p-8 shadow-2xl border border-slate-700">
-              <h2 className="text-2xl font-bold mb-6 text-gray-200">"What If" Score Simulator</h2>
-              <div className="grid lg:grid-cols-2 gap-8">
-                <div className="space-y-6">
-                  <h3 className="text-lg font-semibold text-gray-300">Adjust Factors</h3>
-                  {Object.entries(simulatorData).map(([key, value]) => {
-                    const labels = {
-                      utilityPayments: 'Utility Payment Score',
-                      rentPayments: 'Rent Payment Score',
-                      mobileRecharges: 'Mobile Recharge Consistency',
-                      employmentStability: 'Employment Stability'
-                    };
-                    return (
-                      <div key={key} className="bg-slate-700/30 rounded-xl p-4">
-                        <div className="flex justify-between items-center mb-2">
-                          <label className="text-sm font-medium text-gray-300">{labels[key]}</label>
-                          <span className="text-lg font-bold text-blue-400">{value}</span>
-                        </div>
-                        <input
-                          type="range"
-                          min="0"
-                          max="100"
-                          value={value}
-                          onChange={(e) => handleSimulatorChange(key, parseInt(e.target.value))}
-                          className="w-full h-2 bg-slate-600 rounded-lg appearance-none cursor-pointer slider"
-                        />
-                      </div>
-                    );
-                  })}
-                </div>
-                <div className="bg-slate-700/30 rounded-2xl p-6 text-center">
-                  <h3 className="text-lg font-semibold text-gray-300 mb-4">Simulated Score</h3>
-                  <div className="text-5xl font-bold text-transparent bg-gradient-to-r from-blue-400 to-purple-500 bg-clip-text mb-4">
-                    {calculateSimulatedScore()}
-                  </div>
-                  <div className="text-sm text-gray-400 mb-4">out of 850</div>
-                  <div className={`inline-flex items-center px-4 py-2 rounded-full ${
-                    calculateSimulatedScore() > targetScore ? 'bg-green-500/20 border border-green-500/30 text-green-400' : 
-                    calculateSimulatedScore() < targetScore ? 'bg-red-500/20 border border-red-500/30 text-red-400' : 
-                    'bg-blue-500/20 border border-blue-500/30 text-blue-400'
-                  }`}>
-                    {calculateSimulatedScore() > targetScore ? <ArrowUp size={16} className="mr-1" /> : 
-                     calculateSimulatedScore() < targetScore ? <ArrowDown size={16} className="mr-1" /> : null}
-                    {calculateSimulatedScore() - targetScore > 0 ? '+' : ''}{calculateSimulatedScore() - targetScore} points
-                  </div>
-                </div>
-              </div>
-            </div>
-          )}
-
-          {/* Einstein AI Insights Tab */}
-          {activeTab === 'insights' && (
-            <div className="space-y-6">
-              {/* Einstein Header */}
-              <div className="bg-gradient-to-r from-blue-600 to-purple-600 rounded-3xl p-8 text-center shadow-2xl">
-                <div className="flex items-center justify-center space-x-3 mb-4">
-                  <div className="p-3 bg-white/20 rounded-full backdrop-blur-sm">
-                    <Brain className="text-white" size={32} />
-                  </div>
-                  <h2 className="text-3xl font-bold text-white">Einstein AI Insights</h2>
-                </div>
-                <p className="text-blue-100">Personalized recommendations powered by advanced machine learning</p>
-              </div>
-
-              {/* Insights Grid */}
-              <div className="grid lg:grid-cols-2 gap-6">
-                {aiInsights.map((insight, index) => {
-                  const IconComponent = insight.icon;
-                  const urgencyColors = {
-                    high: 'from-red-800 to-pink-900 border-red-700/50',
-                    medium: 'from-orange-800 to-yellow-900 border-orange-700/50',
-                    low: 'from-green-800 to-emerald-900 border-green-700/50'
-                  };
-                  const urgencyBadges = {
-                    high: 'bg-red-500/20 text-red-400 border-red-500/30',
-                    medium: 'bg-orange-500/20 text-orange-400 border-orange-500/30',
-                    low: 'bg-green-500/20 text-green-400 border-green-500/30'
-                  };
-                  
-                  return (
-                    <div key={index} className={`bg-gradient-to-br ${urgencyColors[insight.urgency]} rounded-2xl p-6 border hover:scale-105 transition-transform duration-200 shadow-xl`}>
-                      <div className="flex items-start justify-between mb-4">
-                        <div className="flex items-center space-x-3">
-                          <div className="p-2 bg-white/20 rounded-lg backdrop-blur-sm">
-                            <IconComponent className="text-white" size={20} />
-                          </div>
-                          <div>
-                            <h3 className="font-semibold text-white">{insight.title}</h3>
-                            <div className={`inline-flex items-center px-2 py-1 rounded-full text-xs border ${urgencyBadges[insight.urgency]} mt-1`}>
-                              {insight.urgency.charAt(0).toUpperCase() + insight.urgency.slice(1)} Priority
-                            </div>
-                          </div>
-                        </div>
-                        <div className="text-right">
-                          <div className="text-lg font-bold text-white">{insight.impact}</div>
-                        </div>
-                      </div>
-                      <p className="text-gray-200 text-sm">{insight.description}</p>
-                      <button className="mt-4 w-full bg-white/20 hover:bg-white/30 text-white px-4 py-2 rounded-lg font-medium transition-colors duration-200 backdrop-blur-sm">
-                        Learn More
-                      </button>
-                    </div>
-                  );
-                })}
-              </div>
-
-              {/* AI Summary */}
-              <div className="bg-gradient-to-br from-slate-800 to-slate-900 rounded-3xl p-8 border border-slate-700">
-                <div className="flex items-center space-x-3 mb-6">
-                  <Lightbulb className="text-yellow-400" size={24} />
-                  <h3 className="text-xl font-bold text-gray-200">AI Summary & Next Steps</h3>
-                </div>
-                <div className="bg-slate-700/30 rounded-xl p-6">
-                  <p className="text-gray-300 mb-4">
-                    Based on our analysis of your financial behavior, you have excellent potential for score improvement. 
-                    Your strongest asset is consistent rent payments, which demonstrates reliability. Focus on mobile payment 
-                    consistency for the biggest immediate impact.
-                  </p>
-                  <div className="grid md:grid-cols-3 gap-4 mt-6">
-                    <div className="bg-blue-500/20 rounded-lg p-4 text-center border border-blue-500/30">
-                      <div className="text-2xl font-bold text-blue-400">30 days</div>
-                      <div className="text-sm text-blue-300">Quick wins timeline</div>
-                    </div>
-                    <div className="bg-green-500/20 rounded-lg p-4 text-center border border-green-500/30">
-                      <div className="text-2xl font-bold text-green-400">+25</div>
-                      <div className="text-sm text-green-300">Potential score increase</div>
-                    </div>
-                    <div className="bg-purple-500/20 rounded-lg p-4 text-center border border-purple-500/30">
-                      <div className="text-2xl font-bold text-purple-400">92%</div>
-                      <div className="text-sm text-purple-300">Success probability</div>
-                    </div>
-                  </div>
-                </div>
               </div>
             </div>
           )}
