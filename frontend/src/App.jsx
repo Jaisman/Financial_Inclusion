@@ -7,6 +7,7 @@ import NGOPage from "./components/Ngo";
 import FinancialQuizPage from "./components/FinancialQuizPage";
 import EduChat from "./components/EduChat";
 import Navbar from "./components/Navbar";
+import FloatingEduButton from "./components/FloatingEduButton";
 import {BrowserRouter, Route, Routes} from 'react-router-dom';
 function App() {
 
@@ -24,6 +25,7 @@ function App() {
         <Route path="/educhat" element={<EduChat/>}/>
         <Route path="/quiz" element={<FinancialQuizPage/>}/>
       </Routes>
+      <FloatingEduButton />
      </BrowserRouter>
     </>
   )
