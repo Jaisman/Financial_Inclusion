@@ -5,7 +5,7 @@ import { Eye, EyeOff, Shield, Lock, User, AlertCircle } from 'lucide-react';
 
 export default function Login() {
   const [formData, setFormData] = useState({
-    email: '',
+    user_id: '',
     password: ''
   });
   const [showPassword, setShowPassword] = useState(false);
@@ -31,8 +31,8 @@ export default function Login() {
   const validateForm = () => {
     const newErrors = {};
     
-    if (!formData.email) {
-      newErrors.email = 'Email is required';
+    if (!formData.user_id) {
+      newErrors.user_id = 'User Id is required';
     }
     
     if (!formData.password) {
@@ -49,15 +49,15 @@ export default function Login() {
 
   setIsLoading(true);
   try {
-    const response = await axios.post('http://localhost:8000/user/login', formData); 
-    const { token } = response.data;
+    const response = await axios.post('http://localhost:8000/user/login', formData);
+    const { authToken, userId } = response.data;
 
-    // Save token in localStorage or context
-    localStorage.setItem('authToken', token);
+    // Save in localStorage
+    localStorage.setItem('authToken', authToken);
+    localStorage.setItem('userId', userId);
 
     alert('Login successful!');
-    navigate('/dashboard'); // or whatever your dashboard route is
-
+    navigate('/credit');
   } catch (error) {
     if (error.response && error.response.data.error) {
       alert(`Login failed: ${error.response.data.error}`);
@@ -68,6 +68,7 @@ export default function Login() {
     setIsLoading(false);
   }
 };
+
 
 
   return (
@@ -101,8 +102,8 @@ export default function Login() {
 
               <div className="space-y-6">
                 <div>
-                  <label htmlFor="email" className="block text-sm font-medium text-gray-700 mb-2">
-                     Email
+                  <label htmlFor="user_id" className="block text-sm font-medium text-gray-700 mb-2">
+                     User Id
                   </label>
                   <div className="relative">
                     <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
@@ -110,20 +111,20 @@ export default function Login() {
                     </div>
                     <input
                       type="text"
-                      id="email"
-                      name="email"
-                      value={formData.email}
+                      id="user_id"
+                      name="user_id"
+                      value={formData.user_id}
                       onChange={handleInputChange}
                       className={`block w-full pl-10 pr-3 py-3 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all ${
-                        errors.email ? 'border-red-500 bg-red-50' : 'border-gray-300 bg-white'
+                        errors.user_id ? 'border-red-500 bg-red-50' : 'border-gray-300 bg-white'
                       }`}
-                      placeholder="Enter your email"
+                      placeholder="Enter your user id"
                     />
                   </div>
-                  {errors.email && (
+                  {errors.user_id && (
                     <div className="flex items-center mt-2 text-red-600 text-sm">
                       <AlertCircle className="w-4 h-4 mr-1" />
-                      {errors.email}
+                      {errors.user_id}
                     </div>
                   )}
                 </div>

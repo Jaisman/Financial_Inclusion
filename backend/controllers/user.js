@@ -1,26 +1,22 @@
-import User from "../models/user.js";
+import UserFeature from "../models/user.js";
 import bcrypt from "bcrypt";
 import jwt from "jsonwebtoken";
 const secret = "mysecretkey";
-import crypto from "crypto";
 
 export async function handleUserSignUp(req, res) {
     try {
         const { name, email, password,phoneNumber} = req.body;
         
-        const existingUser = await User.findOne({ email });
+        const existingUser = await UserFeature.findOne({ email });
         if (existingUser) {
             return res.status(400).json({ message: "Email already in use" });
         }
 
-        const salt = await bcrypt.genSalt(10);
-        const secPass = await bcrypt.hash(password, salt);
-
-        const user = await User.create({
+        const user = await UserFeature.create({
             name,
             email,
             phoneNumber,
-            password: secPass,
+            password,
         });
 
         const userResponse = { 
@@ -36,33 +32,26 @@ export async function handleUserSignUp(req, res) {
     }
 }
 
-export async function handleUserLogin(req,res) {
-    console.log("Login request body:", req.body);
-    const {email,password} = req.body;
-    try {
-        let user = await User.findOne({email});
-        if(!user){
-            return res.status(400).json({error:"Please try to login with correct credetials"});
-        }
-
-        const passwordCompare = await bcrypt.compare(password,user.password);
-        if(!passwordCompare){
-            return res.status(400).json({error:"Please try to login with correct credetials"});
-        }
-        const data = {
-            user:{
-              id : user.id,
-            }
-        }
-        const authToken = jwt.sign(data,secret);
-        await res.cookie("token",authToken);
-        return res.json({authToken,"id":user._id});
-    } 
-    catch (error) {
-        console.error(error.message);
-        res.status(400).send("Internal server error");
+export async function handleUserLogin(req, res) {
+  console.log("Login request body:", req.body);
+  const { user_id, password } = req.body;
+  try {
+    let user = await UserFeature.findOne({ user_id });
+    if (!user) {
+      return res.status(400).json({ error: "Please try to login with correct credentials" });
     }
-
+    if (password !== user.password) {
+      return res.status(400).json({ error: "Please try to login with correct credentials" });
+    }
+    const data = { user: { id: user.id } };
+    const authToken = jwt.sign(data, secret);
+    res.cookie("token", authToken, { httpOnly: true });
+    // Return both:
+    return res.json({ authToken, userId: user.user_id });
+  } catch (error) {
+    console.error(error.message);
+    res.status(500).json({ error: "Internal server error" });
+  }
 }
 
 export async function handleUserLogout(req,res) {
@@ -75,3 +64,27 @@ export async function handleUserLogout(req,res) {
     res.status(500).send("Internal server error");
   }
 }
+// Fetch all user data
+export async function getAllUserData(req, res){
+  try {
+    const data = await UserFeature.find();
+    res.status(200).json(data);
+  } catch (err) {
+    console.error('Error fetching user data:', err);
+    res.status(500).json({ error: 'Internal server error' });
+  }
+};
+
+// Fetch data by user ID (optional enhancement)
+export async function getUserDataById(req, res){
+  const { userId } = req.params;
+  console.log(userId);
+  try {
+    const data = await UserFeature.findOne({ user_id: userId });
+    if (!data) return res.status(404).json({ error: 'User not found' });
+    res.status(200).json(data);
+  } catch (err) {
+    console.error('Error fetching user data by ID:', err);
+    res.status(500).json({ error: 'Internal server error' });
+  }
+};

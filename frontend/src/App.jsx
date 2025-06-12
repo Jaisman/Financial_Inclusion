@@ -4,7 +4,10 @@ import Dashboard from './components/Dashboard';
 import AICreditScoreInsights from "./components/Credit";
 import ProfilePage from "./components/Profile";
 import NGOPage from "./components/Ngo";
+import FinancialQuizPage from "./components/FinancialQuizPage";
+import EduChat from "./components/EduChat";
 import Navbar from "./components/Navbar";
+import FloatingEduButton from "./components/FloatingEduButton";
 import {BrowserRouter, Route, Routes} from 'react-router-dom';
 function App() {
 
@@ -19,7 +22,10 @@ function App() {
         <Route path="/profile" element={<ProfilePage/>}/>
         <Route path="/credit" element={<AICreditScoreInsights/>}/>
         <Route path="/ngo" element={<NGOPage/>}/>
+        <Route path="/educhat" element={<EduChat/>}/>
+        <Route path="/quiz" element={<FinancialQuizPage/>}/>
       </Routes>
+      <FloatingEduButton />
      </BrowserRouter>
     </>
   )

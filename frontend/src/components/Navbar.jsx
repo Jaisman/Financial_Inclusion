@@ -2,12 +2,16 @@ import React from 'react';
 import { Link, useLocation } from 'react-router-dom';
 import {
   Shield,
-  Home,
   User,
   Handshake,
   CreditCard,
   LogIn,
   LogOut,
+  MessageCircle,
+  Brain,
+  TrendingUp,
+  Users,
+  Target
 } from 'lucide-react';
 
 const Navbar = () => {
@@ -15,11 +19,16 @@ const Navbar = () => {
   const isLoggedIn = false; // Replace with real auth check if needed
 
   const navigationItems = [
-    { id: 'home', label: 'Home', icon: Home, path: '/dashboard' },
     { id: 'profile', label: 'Profile', icon: User, path: '/profile' },
     { id: 'ngo', label: 'NGO', icon: Handshake, path: '/ngo' },
     { id: 'credit', label: 'Credit', icon: CreditCard, path: '/credit' },
+    { id: 'educhat', label: 'Educhat', icon: MessageCircle, path: '/educhat' },
+    { id: 'quiz', label: 'Financial Quiz', icon: Target, path: '/quiz' }
   ];
+
+  const isActive = (path) => {
+    return location.pathname === path;
+  };
 
   return (
     <nav className="bg-white shadow-sm border-b border-gray-200">
@@ -34,13 +43,12 @@ const Navbar = () => {
           {/* Navigation Links */}
           <div className="flex items-center space-x-8">
             {navigationItems.map(({ id, label, icon: Icon, path }) => {
-              const isActive = location.pathname === path;
               return (
                 <Link
                   key={id}
                   to={path}
                   className={`flex items-center space-x-1 px-3 py-2 text-sm font-medium transition-colors ${
-                    isActive
+                    isActive(path)
                       ? 'text-blue-600'
                       : 'text-gray-600 hover:text-gray-900'
                   }`}
@@ -65,10 +73,10 @@ const Navbar = () => {
             ) : (
               <Link
                 to="/"
-                className="flex items-center space-x-1 px-4 py-2 bg-blue-600 text-white text-sm font-medium rounded-lg hover:bg-blue-700 transition-colors"
+                className="flex items-center space-x-1 px-4 py-2  text-red-500 text-sm font-medium rounded-lg hover:bg-blue-700 transition-colors"
               >
                 <LogIn className="w-4 h-4" />
-                <span>Login</span>
+                <span>Logout</span>
               </Link>
             )}
           </div>
