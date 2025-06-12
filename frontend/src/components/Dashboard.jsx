@@ -166,21 +166,21 @@ export default function Dashboard() {
   return (
     <div className="min-h-screen bg-gray-50">
       {/* Header */}
-      <header className="bg-white shadow-sm border-b border-gray-200">
+      {/* <header className="bg-white shadow-sm border-b border-gray-200">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="flex justify-between items-center h-16">
+          <div className="flex justify-between items-center h-16"> */}
             {/* Logo */}
-            <div className="flex items-center">
+            {/* <div className="flex items-center">
               <div className="flex items-center">
                 <Shield className="w-8 h-8 text-blue-600 mr-2" />
                 <span className="text-xl font-bold text-gray-900">SecureBank</span>
               </div>
-            </div>
+            </div> */}
 
             {/* User Menu */}
-            <div className="flex items-center space-x-4">
+            {/* <div className="flex items-center space-x-4"> */}
               {/* Notifications */}
-              <div className="relative">
+              {/* <div className="relative">
                 <button
                   onClick={() => setShowNotifications(!showNotifications)}
                   className="relative p-2 text-gray-400 hover:text-gray-500 focus:outline-none focus:ring-2 focus:ring-blue-500 rounded-lg"
@@ -189,10 +189,10 @@ export default function Dashboard() {
                   {userData.alerts.length > 0 && (
                     <span className="absolute top-0 right-0 block h-2 w-2 rounded-full bg-red-400 ring-2 ring-white"></span>
                   )}
-                </button>
+                </button> */}
 
                 {/* Notifications Dropdown */}
-                {showNotifications && (
+                {/* {showNotifications && (
                   <div className="absolute right-0 mt-2 w-80 bg-white rounded-lg shadow-lg ring-1 ring-black ring-opacity-5 z-50">
                     <div className="p-4">
                       <div className="flex items-center justify-between mb-3">
@@ -219,10 +219,10 @@ export default function Dashboard() {
                     </div>
                   </div>
                 )}
-              </div>
+              </div> */}
 
               {/* User Profile */}
-              <div className="flex items-center space-x-3">
+              {/* <div className="flex items-center space-x-3">
                 <div className="text-right">
                   <p className="text-sm font-medium text-gray-900">{userData.name}</p>
                   <p className="text-xs text-gray-500">Premium Member</p>
@@ -237,7 +237,7 @@ export default function Dashboard() {
             </div>
           </div>
         </div>
-      </header>
+      </header> */}
 
       {/* Main Content */}
       <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">

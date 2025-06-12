@@ -37,7 +37,7 @@ export async function handleUserSignUp(req, res) {
 }
 
 export async function handleUserLogin(req,res) {
-
+    console.log("Login request body:", req.body);
     const {email,password} = req.body;
     try {
         let user = await User.findOne({email});

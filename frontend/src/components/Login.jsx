@@ -5,7 +5,7 @@ import { Eye, EyeOff, Shield, Lock, User, AlertCircle } from 'lucide-react';
 
 export default function Login() {
   const [formData, setFormData] = useState({
-    username: '',
+    email: '',
     password: ''
   });
   const [showPassword, setShowPassword] = useState(false);
@@ -31,15 +31,13 @@ export default function Login() {
   const validateForm = () => {
     const newErrors = {};
     
-    if (!formData.username.trim()) {
-      newErrors.username = 'Username is required';
+    if (!formData.email) {
+      newErrors.email = 'Email is required';
     }
     
     if (!formData.password) {
       newErrors.password = 'Password is required';
-    } else if (formData.password.length < 8) {
-      newErrors.password = 'Password must be at least 8 characters';
-    }
+    } 
     
     setErrors(newErrors);
     return Object.keys(newErrors).length === 0;
@@ -51,7 +49,7 @@ export default function Login() {
 
   setIsLoading(true);
   try {
-    const response = await axios.post('http://localhost:8000/user/login', formData); // adjust URL
+    const response = await axios.post('http://localhost:8000/user/login', formData); 
     const { token } = response.data;
 
     // Save token in localStorage or context
@@ -61,8 +59,8 @@ export default function Login() {
     navigate('/dashboard'); // or whatever your dashboard route is
 
   } catch (error) {
-    if (error.response && error.response.data.message) {
-      alert(`Login failed: ${error.response.data.message}`);
+    if (error.response && error.response.data.error) {
+      alert(`Login failed: ${error.response.data.error}`);
     } else {
       alert('Login failed: Network or server error');
     }
@@ -102,10 +100,9 @@ export default function Login() {
               </div>
 
               <div className="space-y-6">
-                {/* Username Field */}
                 <div>
-                  <label htmlFor="username" className="block text-sm font-medium text-gray-700 mb-2">
-                    Username or Email
+                  <label htmlFor="email" className="block text-sm font-medium text-gray-700 mb-2">
+                     Email
                   </label>
                   <div className="relative">
                     <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
@@ -113,20 +110,20 @@ export default function Login() {
                     </div>
                     <input
                       type="text"
-                      id="username"
-                      name="username"
-                      value={formData.username}
+                      id="email"
+                      name="email"
+                      value={formData.email}
                       onChange={handleInputChange}
                       className={`block w-full pl-10 pr-3 py-3 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all ${
-                        errors.username ? 'border-red-500 bg-red-50' : 'border-gray-300 bg-white'
+                        errors.email ? 'border-red-500 bg-red-50' : 'border-gray-300 bg-white'
                       }`}
-                      placeholder="Enter your username or email"
+                      placeholder="Enter your email"
                     />
                   </div>
-                  {errors.username && (
+                  {errors.email && (
                     <div className="flex items-center mt-2 text-red-600 text-sm">
                       <AlertCircle className="w-4 h-4 mr-1" />
-                      {errors.username}
+                      {errors.email}
                     </div>
                   )}
                 </div>

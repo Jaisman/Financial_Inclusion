@@ -92,7 +92,7 @@ export default function NGOPage() {
               <button className="bg-white text-blue-600 px-6 py-3 rounded-lg font-semibold hover:bg-blue-50 transition-colors">
                 Partner With Us
               </button>
-              <button className="border border-white text-white px-6 py-3 rounded-lg font-semibold hover:bg-white hover:bg-opacity-10 transition-colors">
+              <button className="border border-white text-white px-6 py-3 rounded-lg font-semibold  hover:bg-opacity-10 transition-colors">
                 View Programs
               </button>
             </div>
