@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import { Link, useLocation } from 'react-router-dom';
 import {
   Shield,
@@ -8,15 +8,17 @@ import {
   LogIn,
   LogOut,
   MessageCircle,
-  Brain,
-  TrendingUp,
-  Users,
   Target
 } from 'lucide-react';
 
 const Navbar = () => {
   const location = useLocation();
-  const isLoggedIn = false; // Replace with real auth check if needed
+  const [isLoggedIn, setIsLoggedIn] = useState(false);
+
+  useEffect(() => {
+    const token = localStorage.getItem('authToken');
+    setIsLoggedIn(!!token);
+  }, []);
 
   const navigationItems = [
     { id: 'profile', label: 'Profile', icon: User, path: '/profile' },
@@ -26,59 +28,95 @@ const Navbar = () => {
     { id: 'quiz', label: 'Financial Quiz', icon: Target, path: '/quiz' }
   ];
 
-  const isActive = (path) => {
-    return location.pathname === path;
+  const isActive = (path) => location.pathname === path;
+
+  const handleLogout = () => {
+    localStorage.removeItem('authToken');
+    setIsLoggedIn(false);
+    // Optionally redirect or refresh
+    window.location.href = '/';
   };
 
   return (
-    <nav className="bg-white shadow-sm border-b border-gray-200">
+    <nav className="bg-gradient-to-r from-slate-900 via-blue-900 to-indigo-900 shadow-lg border-b border-slate-700">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex justify-between items-center h-16">
           {/* Logo */}
-          <div className="flex items-center">
-            <Shield className="w-8 h-8 text-blue-600 mr-2" />
-            <span className="text-xl font-bold text-gray-900">SecureBank</span>
-          </div>
+          <Link to="/" className="flex items-center space-x-3">
+            <div className="p-2 bg-gradient-to-r from-blue-500 to-purple-600 rounded-lg">
+              <Shield className="text-white" size={24} />
+            </div>
+            <span className="text-xl font-bold bg-gradient-to-r from-blue-400 to-purple-400 bg-clip-text text-transparent">
+              SecureBank
+            </span>
+          </Link>
 
           {/* Navigation Links */}
-          <div className="flex items-center space-x-8">
-            {navigationItems.map(({ id, label, icon: Icon, path }) => {
-              return (
-                <Link
-                  key={id}
-                  to={path}
-                  className={`flex items-center space-x-1 px-3 py-2 text-sm font-medium transition-colors ${
-                    isActive(path)
-                      ? 'text-blue-600'
-                      : 'text-gray-600 hover:text-gray-900'
-                  }`}
-                >
-                  <Icon className="w-4 h-4" />
-                  <span>{label}</span>
-                </Link>
-              );
-            })}
+          <div className="hidden md:flex items-center space-x-6">
+            {navigationItems.map(({ id, label, icon: Icon, path }) => (
+              <Link
+                key={id}
+                to={path}
+                className={`flex items-center space-x-2 px-3 py-2 rounded-lg text-sm font-medium transition-all duration-300 ${
+                  isActive(path)
+                    ? 'bg-gradient-to-r from-blue-500/20 to-purple-600/20 text-blue-400 border border-blue-500/30'
+                    : 'text-gray-300 hover:text-white hover:bg-slate-800/50'
+                }`}
+              >
+                <Icon size={16} />
+                <span>{label}</span>
+              </Link>
+            ))}
           </div>
 
           {/* Auth Button */}
-          <div>
+          <div className="flex items-center">
             {isLoggedIn ? (
               <button
-                onClick={() => console.log('Logout')} // Replace with actual logout logic
-                className="flex items-center space-x-1 px-4 py-2 text-sm font-medium text-gray-600 hover:text-red-600 transition-colors"
+                onClick={handleLogout}
+                className="flex items-center space-x-2 px-4 py-2 text-sm font-medium text-gray-300 hover:text-red-400 transition-colors duration-300 rounded-lg hover:bg-slate-800/50"
               >
-                <LogOut className="w-4 h-4" />
+                <LogOut size={16} />
                 <span>Logout</span>
               </button>
             ) : (
               <Link
                 to="/"
-                className="flex items-center space-x-1 px-4 py-2  text-red-500 text-sm font-medium rounded-lg hover:bg-blue-700 transition-colors"
+                className="flex items-center space-x-2 px-4 py-2 text-sm font-medium bg-gradient-to-r from-blue-500 to-purple-600 text-white rounded-lg hover:from-blue-600 hover:to-purple-700 transition-all duration-300"
               >
-                <LogIn className="w-4 h-4" />
-                <span>Logout</span>
+                <LogIn size={16} />
+                <span>Login</span>
               </Link>
             )}
+          </div>
+
+          {/* Mobile menu button */}
+          <div className="md:hidden">
+            <button className="text-gray-300 hover:text-white p-2 rounded-lg hover:bg-slate-800/50 transition-colors duration-300">
+              <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 6h16M4 12h16M4 18h16" />
+              </svg>
+            </button>
+          </div>
+        </div>
+
+        {/* Mobile Navigation Menu */}
+        <div className="md:hidden border-t border-slate-700">
+          <div className="px-2 pt-2 pb-3 space-y-1">
+            {navigationItems.map(({ id, label, icon: Icon, path }) => (
+              <Link
+                key={id}
+                to={path}
+                className={`flex items-center space-x-2 px-3 py-2 rounded-lg text-sm font-medium transition-all duration-300 ${
+                  isActive(path)
+                    ? 'bg-gradient-to-r from-blue-500/20 to-purple-600/20 text-blue-400 border border-blue-500/30'
+                    : 'text-gray-300 hover:text-white hover:bg-slate-800/50'
+                }`}
+              >
+                <Icon size={16} />
+                <span>{label}</span>
+              </Link>
+            ))}
           </div>
         </div>
       </div>
