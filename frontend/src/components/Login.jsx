@@ -1,4 +1,6 @@
 import  { useState } from 'react';
+import axios from 'axios';
+import { useNavigate } from 'react-router-dom';
 import { Eye, EyeOff, Shield, Lock, User, AlertCircle } from 'lucide-react';
 
 export default function Login() {
@@ -9,6 +11,8 @@ export default function Login() {
   const [showPassword, setShowPassword] = useState(false);
   const [errors, setErrors] = useState({});
   const [isLoading, setIsLoading] = useState(false);
+  const navigate = useNavigate();
+
 
   const handleInputChange = (e) => {
     const { name, value } = e.target;
@@ -42,14 +46,31 @@ export default function Login() {
   };
 
   const handleSubmit = async (e) => {
-    e.preventDefault();
-    if (!validateForm()) return;
-    setIsLoading(true);
-    setTimeout(() => {
-      setIsLoading(false);
-      alert('Login successful! (Demo)');
-    }, 2000);
-  };
+  e.preventDefault();
+  if (!validateForm()) return;
+
+  setIsLoading(true);
+  try {
+    const response = await axios.post('http://localhost:8000/user/login', formData); // adjust URL
+    const { token } = response.data;
+
+    // Save token in localStorage or context
+    localStorage.setItem('authToken', token);
+
+    alert('Login successful!');
+    navigate('/dashboard'); // or whatever your dashboard route is
+
+  } catch (error) {
+    if (error.response && error.response.data.message) {
+      alert(`Login failed: ${error.response.data.message}`);
+    } else {
+      alert('Login failed: Network or server error');
+    }
+  } finally {
+    setIsLoading(false);
+  }
+};
+
 
   return (
     <>
@@ -174,7 +195,7 @@ export default function Login() {
                 <div className="text-center">
                   <p className="text-sm text-gray-600">
                     Don't have an account?{' '}
-                    <a href="#" className="font-medium text-blue-600 hover:text-blue-500">
+                    <a href="/register" className="font-medium text-blue-600 hover:text-blue-500">
                       Open Account
                     </a>
                   </p>

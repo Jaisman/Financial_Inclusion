@@ -1,13 +1,11 @@
 import React, { useState } from 'react';
-import { Eye, EyeOff, Shield, Lock, User, Mail, Phone, AlertCircle, Check, X } from 'lucide-react';
+import { Eye, EyeOff, Shield } from 'lucide-react';
+import axios from 'axios';
 
 export default function FinancialSignUp() {
   const [formData, setFormData] = useState({
-    firstName: '',
-    lastName: '',
     email: '',
     phone: '',
-    username: '',
     password: '',
     confirmPassword: ''
   });
@@ -38,8 +36,6 @@ export default function FinancialSignUp() {
 
   const validateForm = () => {
     const newErrors = {};
-    if (!formData.firstName.trim()) newErrors.firstName = 'First name is required';
-    if (!formData.lastName.trim()) newErrors.lastName = 'Last name is required';
     if (!formData.email.trim()) {
       newErrors.email = 'Email is required';
     } else if (!/\S+@\S+\.\S+/.test(formData.email)) {
@@ -49,11 +45,6 @@ export default function FinancialSignUp() {
       newErrors.phone = 'Phone number is required';
     } else if (!/^\+?[\d\s\-\(\)]{10,}$/.test(formData.phone)) {
       newErrors.phone = 'Invalid phone number';
-    }
-    if (!formData.username.trim()) {
-      newErrors.username = 'Username is required';
-    } else if (formData.username.length < 3) {
-      newErrors.username = 'Username must be at least 3 characters';
     }
     if (!formData.password) {
       newErrors.password = 'Password is required';
@@ -72,14 +63,34 @@ export default function FinancialSignUp() {
     return Object.keys(newErrors).length === 0;
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
     if (!validateForm()) return;
+
     setIsLoading(true);
-    setTimeout(() => {
-      setIsLoading(false);
+    try {
+      const response = await axios.post('http://localhost:8000/user/signup', {
+        ...formData,
+      });
+
       alert('Account created successfully!');
-    }, 2000);
+      setFormData({
+        email: '',
+        phone: '',
+        password: '',
+        confirmPassword: ''
+      });
+      setAgreedToTerms(false);
+      setAgreedToMarketing(false);
+    } catch (error) {
+      if (error.response?.data?.error) {
+        alert(`Signup failed: ${error.response.data.error}`);
+      } else {
+        alert('An error occurred during signup');
+      }
+    } finally {
+      setIsLoading(false);
+    }
   };
 
   const passwordStrength = getPasswordStrength(formData.password);
@@ -98,7 +109,6 @@ export default function FinancialSignUp() {
         </div>
 
         <form onSubmit={handleSubmit} className="space-y-6">
-          
 
           {/* Email */}
           <div>
@@ -126,20 +136,6 @@ export default function FinancialSignUp() {
               placeholder="+91 9876543210"
             />
             {errors.phone && <p className="text-red-500 text-sm">{errors.phone}</p>}
-          </div>
-
-          {/* Username */}
-          <div>
-            <label className="block mb-2 font-medium">Username</label>
-            <input
-              type="text"
-              name="username"
-              value={formData.username}
-              onChange={handleInputChange}
-              className={`w-full p-3 rounded-lg border ${errors.username ? 'border-red-500' : 'border-gray-300'}`}
-              placeholder="username123"
-            />
-            {errors.username && <p className="text-red-500 text-sm">{errors.username}</p>}
           </div>
 
           {/* Password */}
@@ -172,6 +168,28 @@ export default function FinancialSignUp() {
             {errors.password && <p className="text-red-500 text-sm">{errors.password}</p>}
           </div>
 
+          {/* Confirm Password */}
+          <div>
+            <label className="block mb-2 font-medium">Confirm Password</label>
+            <div className="relative">
+              <input
+                type={showConfirmPassword ? 'text' : 'password'}
+                name="confirmPassword"
+                value={formData.confirmPassword}
+                onChange={handleInputChange}
+                className={`w-full p-3 rounded-lg border ${errors.confirmPassword ? 'border-red-500' : 'border-gray-300'}`}
+                placeholder="Re-enter your password"
+              />
+              <button
+                type="button"
+                className="absolute right-3 top-3"
+                onClick={() => setShowConfirmPassword(!showConfirmPassword)}
+              >
+                {showConfirmPassword ? <EyeOff /> : <Eye />}
+              </button>
+            </div>
+            {errors.confirmPassword && <p className="text-red-500 text-sm">{errors.confirmPassword}</p>}
+          </div>
 
           {/* Submit Button */}
           <button type="submit" disabled={isLoading} className="w-full p-3 bg-blue-600 text-white rounded-lg">

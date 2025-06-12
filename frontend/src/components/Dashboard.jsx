@@ -20,7 +20,10 @@ import {
   Activity,
   FileText,
   Menu,
-  LogOut
+  LogOut,
+  TrendingDown,
+  Clock,
+  Percent
 } from 'lucide-react';
 
 export default function Dashboard() {
@@ -79,6 +82,44 @@ export default function Dashboard() {
         impact: '+10 points potential',
         difficulty: 'Medium'
       }
+    ],
+    scoreFactors: [
+      {
+        id: 1,
+        factor: 'High Credit Utilization',
+        impact: 'Negative',
+        description: 'Your credit utilization is at 67% across all cards',
+        severity: 'high',
+        icon: Percent,
+        recommendation: 'Pay down balances to below 30% utilization'
+      },
+      {
+        id: 2,
+        factor: 'Recent Credit Inquiries',
+        impact: 'Negative',
+        description: '3 hard inquiries in the last 6 months',
+        severity: 'medium',
+        icon: FileText,
+        recommendation: 'Avoid applying for new credit for 6-12 months'
+      },
+      {
+        id: 3,
+        factor: 'Short Credit History',
+        impact: 'Negative',
+        description: 'Average account age is only 2.1 years',
+        severity: 'medium',
+        icon: Clock,
+        recommendation: 'Keep older accounts open to improve average age'
+      },
+      {
+        id: 4,
+        factor: 'Limited Credit Mix',
+        impact: 'Negative',
+        description: 'Only credit cards, no installment loans',
+        severity: 'low',
+        icon: CreditCard,
+        recommendation: 'Consider adding a personal loan or auto loan'
+      }
     ]
   };
 
@@ -106,6 +147,19 @@ export default function Dashboard() {
         return <AlertTriangle className="w-5 h-5 text-red-500" />;
       default:
         return <Bell className="w-5 h-5 text-blue-500" />;
+    }
+  };
+
+  const getSeverityColor = (severity) => {
+    switch (severity) {
+      case 'high':
+        return 'text-red-600 bg-red-50 border-red-200';
+      case 'medium':
+        return 'text-orange-600 bg-orange-50 border-orange-200';
+      case 'low':
+        return 'text-yellow-600 bg-yellow-50 border-yellow-200';
+      default:
+        return 'text-gray-600 bg-gray-50 border-gray-200';
     }
   };
 
@@ -193,29 +247,8 @@ export default function Dashboard() {
           <p className="text-gray-600">Here's your financial overview for today</p>
         </div>
 
-        {/* Profile Completion Banner */}
-        <div className="bg-gradient-to-r from-blue-500 to-blue-600 rounded-lg p-6 mb-8 text-white">
-          <div className="flex items-center justify-between">
-            <div>
-              <h3 className="text-lg font-semibold mb-2">Complete Your Profile</h3>
-              <p className="text-blue-100 mb-4">
-                You're {profileCompletion}% done! Complete your profile to unlock all features.
-              </p>
-              <div className="w-64 bg-blue-400 rounded-full h-2">
-                <div 
-                  className="bg-white h-2 rounded-full transition-all duration-500"
-                  style={{ width: `${profileCompletion}%` }}
-                ></div>
-              </div>
-            </div>
-            <button className="bg-white text-blue-600 px-4 py-2 rounded-lg font-medium hover:bg-blue-50 transition-colors">
-              Complete Now
-            </button>
-          </div>
-        </div>
-
         {/* Overview Cards */}
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mb-8">
+        <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 mb-8">
           {/* Credit Score Card */}
           <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-6">
             <div className="flex items-center justify-between mb-4">
@@ -252,53 +285,39 @@ export default function Dashboard() {
             </div>
           </div>
 
-          {/* Alerts Summary */}
-          <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-6">
-            <div className="flex items-center justify-between mb-4">
-              <h3 className="text-lg font-semibold text-gray-900">Active Alerts</h3>
-              <Bell className="w-5 h-5 text-yellow-500" />
+          {/* Score Factors Card - Spans 2 columns */}
+          <div className="lg:col-span-2 bg-white rounded-lg shadow-sm border border-gray-200 p-6">
+            <div className="flex items-center justify-between mb-6">
+              <div className="flex items-center space-x-2">
+                <TrendingDown className="w-5 h-5 text-red-500" />
+                <h3 className="text-lg font-semibold text-gray-900">Factors Affecting Your Score</h3>
+              </div>
+              <span className="text-sm text-gray-500">What's holding you back</span>
             </div>
-            <div className="space-y-3">
-              {userData.alerts.slice(0, 2).map((alert) => (
-                <div key={alert.id} className="flex items-start space-x-3">
-                  {getAlertIcon(alert.type)}
-                  <div className="flex-1 min-w-0">
-                    <p className="text-sm font-medium text-gray-900 truncate">{alert.title}</p>
-                    <p className="text-xs text-gray-500">{alert.time}</p>
+            
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+              {userData.scoreFactors.map((factor) => {
+                const IconComponent = factor.icon;
+                return (
+                  <div key={factor.id} className={`rounded-lg p-4 border ${getSeverityColor(factor.severity)}`}>
+                    <div className="flex items-start space-x-3">
+                      <div className="flex-shrink-0">
+                        <IconComponent className="w-5 h-5" />
+                      </div>
+                      <div className="flex-1 min-w-0">
+                        <div className="flex items-center justify-between mb-2">
+                          <h4 className="text-sm font-medium">{factor.factor}</h4>
+                          <span className="text-xs font-medium px-2 py-1 rounded-full bg-current bg-opacity-10">
+                            {factor.severity.charAt(0).toUpperCase() + factor.severity.slice(1)}
+                          </span>
+                        </div>
+                        <p className="text-xs mb-2 opacity-80">{factor.description}</p>
+                        <p className="text-xs font-medium">💡 {factor.recommendation}</p>
+                      </div>
+                    </div>
                   </div>
-                </div>
-              ))}
-              {userData.alerts.length > 2 && (
-                <button className="text-sm text-blue-600 hover:text-blue-800 font-medium">
-                  View all {userData.alerts.length} alerts
-                </button>
-              )}
-            </div>
-          </div>
-
-          {/* Quick Stats */}
-          <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-6">
-            <div className="flex items-center justify-between mb-4">
-              <h3 className="text-lg font-semibold text-gray-900">Quick Stats</h3>
-              <Activity className="w-5 h-5 text-blue-500" />
-            </div>
-            <div className="space-y-3">
-              <div className="flex justify-between items-center">
-                <span className="text-sm text-gray-600">Credit Utilization</span>
-                <span className="text-sm font-medium text-green-600">23%</span>
-              </div>
-              <div className="flex justify-between items-center">
-                <span className="text-sm text-gray-600">Payment History</span>
-                <span className="text-sm font-medium text-green-600">100%</span>
-              </div>
-              <div className="flex justify-between items-center">
-                <span className="text-sm text-gray-600">Account Age</span>
-                <span className="text-sm font-medium text-blue-600">7.2 years</span>
-              </div>
-              <div className="flex justify-between items-center">
-                <span className="text-sm text-gray-600">Total Accounts</span>
-                <span className="text-sm font-medium text-blue-600">12</span>
-              </div>
+                );
+              })}
             </div>
           </div>
         </div>
@@ -331,48 +350,6 @@ export default function Dashboard() {
                 </div>
               </div>
             ))}
-          </div>
-        </div>
-
-        {/* Quick Actions */}
-        <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-6">
-          <h3 className="text-lg font-semibold text-gray-900 mb-6">Quick Actions</h3>
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
-            {/* Apply for Loan */}
-            <button className="flex items-center justify-center space-x-3 p-4 bg-gradient-to-r from-blue-500 to-blue-600 text-white rounded-lg hover:from-blue-600 hover:to-blue-700 transition-all duration-200 shadow-sm">
-              <DollarSign className="w-5 h-5" />
-              <span className="font-medium">Apply for Loan</span>
-            </button>
-
-            {/* Update Profile */}
-            <button className="flex items-center justify-center space-x-3 p-4 bg-gradient-to-r from-green-500 to-green-600 text-white rounded-lg hover:from-green-600 hover:to-green-700 transition-all duration-200 shadow-sm">
-              <User className="w-5 h-5" />
-              <span className="font-medium">Update Profile</span>
-            </button>
-
-            {/* Connect Account */}
-            <button className="flex items-center justify-center space-x-3 p-4 bg-gradient-to-r from-purple-500 to-purple-600 text-white rounded-lg hover:from-purple-600 hover:to-purple-700 transition-all duration-200 shadow-sm">
-              <Link className="w-5 h-5" />
-              <span className="font-medium">Connect Account</span>
-            </button>
-
-            {/* View Reports */}
-            <button className="flex items-center justify-center space-x-3 p-4 border-2 border-gray-200 text-gray-700 rounded-lg hover:border-gray-300 hover:bg-gray-50 transition-all duration-200">
-              <FileText className="w-5 h-5" />
-              <span className="font-medium">View Reports</span>
-            </button>
-
-            {/* Set Goals */}
-            <button className="flex items-center justify-center space-x-3 p-4 border-2 border-gray-200 text-gray-700 rounded-lg hover:border-gray-300 hover:bg-gray-50 transition-all duration-200">
-              <Target className="w-5 h-5" />
-              <span className="font-medium">Set Goals</span>
-            </button>
-
-            {/* Settings */}
-            <button className="flex items-center justify-center space-x-3 p-4 border-2 border-gray-200 text-gray-700 rounded-lg hover:border-gray-300 hover:bg-gray-50 transition-all duration-200">
-              <Settings className="w-5 h-5" />
-              <span className="font-medium">Settings</span>
-            </button>
           </div>
         </div>
 
