@@ -57,7 +57,7 @@ export default function Login() {
     localStorage.setItem('userId', userId);
 
     alert('Login successful!');
-    navigate('/dashboard');
+    navigate('/credit');
   } catch (error) {
     if (error.response && error.response.data.error) {
       alert(`Login failed: ${error.response.data.error}`);

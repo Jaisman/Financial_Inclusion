@@ -72,7 +72,7 @@ const Navbar = () => {
               </button>
             ) : (
               <Link
-                to="/login"
+                to="/"
                 className="flex items-center space-x-1 px-4 py-2  text-red-500 text-sm font-medium rounded-lg hover:bg-blue-700 transition-colors"
               >
                 <LogIn className="w-4 h-4" />
