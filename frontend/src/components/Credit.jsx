@@ -35,17 +35,17 @@ const AICreditScoreInsights = () => {
 
   // Sample user data for testing
   const SAMPLE_USER = {
-    age: 32,
+    age: 35,
     employment_status: "self-employed",
-    monthly_income: 25000,
-    utility_bill_payment_history: 78.5,
+    monthly_income: 2500,
+    utility_bill_payment_history: 70,
     rental_payment_history: 82.0,
     mobile_recharge_frequency: 3,
     mobile_data_usage: 5.5,
-    education_level: "Graduate",
+    education_level: "High School",
     financial_literacy_score: 6,
-    loan_repayment_history: 65.0,
-    region: "semi-urban"
+    loan_repayment_history: 45.0,
+    region: "rural"
   };
 
   // Fetch credit score on component mount
