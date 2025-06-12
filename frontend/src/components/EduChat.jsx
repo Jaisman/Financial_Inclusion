@@ -1,4 +1,4 @@
-import React, { useState, useRef } from 'react';
+import React, { useState, useRef, useEffect } from 'react';
 import { 
   MessageCircle, 
   Target, 
@@ -11,7 +11,8 @@ import {
   Send,
   ChevronLeft,
   ChevronRight,
-  Brain
+  Brain,
+  Loader2
 } from 'lucide-react';
 
 const EduChat = () => {
@@ -21,6 +22,23 @@ const EduChat = () => {
   const [input, setInput] = useState('');
   const [currentTipIndex, setCurrentTipIndex] = useState(0);
   const [goal, setGoal] = useState('');
+  const [isLoading, setIsLoading] = useState(false);
+  const [userId] = useState(`user_${Math.floor(Math.random() * 10000)}`);
+  const [userData, setUserData] = useState({
+    age: 35,
+    employment_status: "self-employed",
+    monthly_income: 2500,
+    utility_bill_payment_history: 70,
+    rental_payment_history: 82.0,
+    mobile_recharge_frequency: 3,
+    mobile_data_usage: 5.5,
+    education_level: "High School",
+    financial_literacy_score: 6,
+    loan_repayment_history: 45.0,
+    region: "rural"
+  });
+  const [creditScore, setCreditScore] = useState(null);
+  const [shapValues, setShapValues] = useState(null);
   const messagesEndRef = useRef(null);
 
   // Mock data for financial goal
@@ -46,28 +64,117 @@ const EduChat = () => {
     { tip: "Regularly checking your credit report can help catch errors and prevent fraud." }
   ];
 
-  // Mock data for personalized tips
-  const personalizedTips = [
-    { id: 1, category: 'Credit Score', tip: 'Your credit utilization is high. Try to keep it below 30%.' },
-    { id: 2, category: 'Savings', tip: 'Consider setting up automatic transfers to your savings account.' },
-    { id: 3, category: 'Investment', tip: 'Start with index funds for a diversified portfolio.' }
-  ];
+  // Initialize chat with backend
+  useEffect(() => {
+    const initializeChat = async () => {
+      try {
+        setIsLoading(true);
+        
+        // First get the credit score and SHAP values
+        const scoreResponse = await fetch('http://localhost:5000/predict', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify(userData)
+        });
+        const scoreData = await scoreResponse.json();
+        setCreditScore(scoreData.credit_score);
+        
+        const shapResponse = await fetch('http://localhost:5000/explain', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify(userData)
+        });
+        const shapData = await shapResponse.json();
+        setShapValues(shapData.shap_values);
+        
+        // Then initialize the chat session
+        const chatResponse = await fetch('http://localhost:5000/educhat/start', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({
+            ...userData,
+            user_id: userId
+          })
+        });
+        const chatData = await chatResponse.json();
+        
+        // Update the initial bot message with the personalized greeting
+        setMessages([{ 
+          id: 1, 
+          text: chatData.message, 
+          sender: 'bot' 
+        }]);
+        
+      } catch (error) {
+        console.error("Error initializing chat:", error);
+        setMessages([{ 
+          id: 1, 
+          text: "Hi! I'm your financial education assistant. We're having some technical issues, but you can still ask me questions!", 
+          sender: 'bot' 
+        }]);
+      } finally {
+        setIsLoading(false);
+      }
+    };
+    
+    initializeChat();
+  }, []);
 
-  const handleSendMessage = (e) => {
+  // Auto-scroll to bottom of chat
+  useEffect(() => {
+    messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
+  }, [messages]);
+
+  const handleSendMessage = async (e) => {
     e.preventDefault();
-    if (!input.trim()) return;
+    if (!input.trim() || isLoading) return;
 
-    setMessages([...messages, { id: messages.length + 1, text: input, sender: 'user' }]);
+    // Add user message to UI immediately
+    const userMessage = { id: messages.length + 1, text: input, sender: 'user' };
+    setMessages(prev => [...prev, userMessage]);
     setInput('');
+    setIsLoading(true);
 
-    // Mock bot response
-    setTimeout(() => {
+    try {
+      // Send message to backend
+      const response = await fetch('http://localhost:5000/educhat', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          user_id: userId,
+          message: input
+        })
+      });
+      
+      const data = await response.json();
+      
+      if (data.status === 'success') {
+        setMessages(prev => [...prev, { 
+          id: prev.length + 1, 
+          text: data.message, 
+          sender: 'bot' 
+        }]);
+      } else {
+        throw new Error(data.message || 'Failed to get response');
+      }
+    } catch (error) {
+      console.error("Error sending message:", error);
       setMessages(prev => [...prev, { 
         id: prev.length + 1, 
-        text: "That's a great question! Let me help you with that...", 
+        text: "Sorry, I'm having trouble responding right now. Please try again later.", 
         sender: 'bot' 
       }]);
-    }, 1000);
+    } finally {
+      setIsLoading(false);
+    }
   };
 
   const handleSetGoal = (e) => {
@@ -75,6 +182,81 @@ const EduChat = () => {
     // Handle setting new goal
     setGoal('');
   };
+
+  // Generate personalized tips based on credit score and SHAP values
+  const generatePersonalizedTips = () => {
+    if (!shapValues || !creditScore) return [];
+    
+    const tips = [];
+    
+    // Get top 3 factors affecting the score
+    const topFactors = Object.entries(shapValues)
+      .sort((a, b) => Math.abs(b[1].shap) - Math.abs(a[1].shap))
+      .slice(0, 3);
+    
+    topFactors.forEach(([factor, data]) => {
+      const isPositive = data.shap > 0;
+      
+      let tip = '';
+      let category = 'Credit Score';
+      
+      switch(factor) {
+        case 'utility_bill_payment_history':
+          tip = isPositive 
+            ? "Great job paying your utility bills on time! Keep it up to maintain your good credit score."
+            : "Try to improve your utility bill payment history. Setting up automatic payments can help.";
+          category = 'Bills';
+          break;
+        case 'monthly_income':
+          tip = isPositive
+            ? "Your income level is helping your credit score. Consider increasing savings as your income grows."
+            : "Your income level is affecting your score. Look for ways to increase income or reduce debt-to-income ratio.";
+          category = 'Income';
+          break;
+        case 'loan_repayment_history':
+          tip = isPositive
+            ? "Your good loan repayment history is boosting your score. Continue making timely payments."
+            : "Improving your loan repayment history could significantly help your credit score.";
+          category = 'Loans';
+          break;
+        default:
+          tip = isPositive
+            ? `Your ${factor.replace(/_/g, ' ')} is helping your credit score.`
+            : `Improving your ${factor.replace(/_/g, ' ')} could help your credit score.`;
+      }
+      
+      tips.push({
+        id: factor,
+        category,
+        tip
+      });
+    });
+    
+    // Add general tips based on credit score range
+    if (creditScore < 5) {
+      tips.push({
+        id: 'low-score',
+        category: 'Credit Score',
+        tip: 'Your credit score needs improvement. Focus on paying bills on time and reducing credit utilization.'
+      });
+    } else if (creditScore < 8) {
+      tips.push({
+        id: 'medium-score',
+        category: 'Credit Score',
+        tip: 'Your credit score is decent. To improve further, maintain low credit utilization and avoid new hard inquiries.'
+      });
+    } else {
+      tips.push({
+        id: 'high-score',
+        category: 'Credit Score',
+        tip: 'Excellent credit score! Maintain your good habits and consider optimizing your credit mix.'
+      });
+    }
+    
+    return tips;
+  };
+
+  const personalizedTips = generatePersonalizedTips();
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-slate-900 via-blue-900 to-indigo-900 text-white">
@@ -206,6 +388,11 @@ const EduChat = () => {
               <div className="flex items-center space-x-2 mb-4">
                 <MessageCircle className="w-5 h-5 text-blue-400" />
                 <h3 className="text-lg font-semibold text-gray-200">Chat with EduBot</h3>
+                {creditScore && (
+                  <span className="ml-auto text-sm font-medium px-3 py-1 rounded-full bg-blue-500/20 text-blue-400">
+                    Your Score: {creditScore.toFixed(1)}/10
+                  </span>
+                )}
               </div>
               <div className="flex-1 overflow-y-auto bg-slate-700/30 rounded-lg p-4 mb-4">
                 {messages.map((msg) => (
@@ -214,7 +401,7 @@ const EduChat = () => {
                     className={`flex ${msg.sender === 'user' ? 'justify-end' : 'justify-start'} mb-4`}
                   >
                     <div
-                      className={`max-w-xs p-3 rounded-lg ${
+                      className={`max-w-xs lg:max-w-md p-3 rounded-lg ${
                         msg.sender === 'user'
                           ? 'bg-gradient-to-r from-blue-500 to-purple-600 text-white'
                           : 'bg-slate-700/50 border border-slate-600 text-gray-200'
@@ -224,6 +411,16 @@ const EduChat = () => {
                     </div>
                   </div>
                 ))}
+                {isLoading && (
+                  <div className="flex justify-start mb-4">
+                    <div className="bg-slate-700/50 border border-slate-600 text-gray-200 p-3 rounded-lg">
+                      <div className="flex items-center space-x-2">
+                        <Loader2 className="w-4 h-4 animate-spin" />
+                        <span className="text-sm">Thinking...</span>
+                      </div>
+                    </div>
+                  </div>
+                )}
                 <div ref={messagesEndRef} />
               </div>
               <form onSubmit={handleSendMessage} className="flex items-center mt-auto">
@@ -234,13 +431,23 @@ const EduChat = () => {
                   placeholder="Ask about credit, savings, or loans..."
                   className="flex-1 p-3 bg-slate-700/50 border border-slate-600 rounded-l-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent text-gray-200 placeholder-gray-400"
                   aria-label="Chat input"
+                  disabled={isLoading}
                 />
                 <button 
                   type="submit"
-                  className="bg-gradient-to-r from-blue-500 to-purple-600 text-white p-3 rounded-r-lg hover:from-blue-600 hover:to-purple-700 transition-all duration-300"
+                  className={`p-3 rounded-r-lg transition-all duration-300 ${
+                    isLoading
+                      ? 'bg-gray-600 cursor-not-allowed'
+                      : 'bg-gradient-to-r from-blue-500 to-purple-600 hover:from-blue-600 hover:to-purple-700'
+                  }`}
                   aria-label="Send message"
+                  disabled={isLoading}
                 >
-                  <Send className="w-5 h-5" />
+                  {isLoading ? (
+                    <Loader2 className="w-5 h-5 animate-spin" />
+                  ) : (
+                    <Send className="w-5 h-5" />
+                  )}
                 </button>
               </form>
             </div>
@@ -253,23 +460,30 @@ const EduChat = () => {
               <h3 className="text-lg font-semibold text-gray-200">Your Financial Tips</h3>
             </div>
             <div className="space-y-4 max-h-[600px] overflow-y-auto">
-              {personalizedTips.map((tip) => (
-                <div
-                  key={tip.id}
-                  className="bg-slate-700/30 rounded-lg p-4 border border-slate-600"
-                >
-                  <span className="text-xs font-medium text-blue-400 bg-blue-500/20 px-2 py-1 rounded-full">
-                    {tip.category}
-                  </span>
-                  <p className="text-sm text-gray-300 mt-2">{tip.tip}</p>
-                  <button
-                    onClick={() => setInput(`Tell me more about ${tip.tip.toLowerCase()}`)}
-                    className="text-xs text-blue-400 hover:text-blue-300 font-medium mt-2 transition-colors duration-200"
+              {personalizedTips.length > 0 ? (
+                personalizedTips.map((tip) => (
+                  <div
+                    key={tip.id}
+                    className="bg-slate-700/30 rounded-lg p-4 border border-slate-600"
                   >
-                    Ask EduBot
-                  </button>
+                    <span className="text-xs font-medium text-blue-400 bg-blue-500/20 px-2 py-1 rounded-full">
+                      {tip.category}
+                    </span>
+                    <p className="text-sm text-gray-300 mt-2">{tip.tip}</p>
+                    <button
+                      onClick={() => setInput(`Tell me more about: ${tip.tip}`)}
+                      className="text-xs text-blue-400 hover:text-blue-300 font-medium mt-2 transition-colors duration-200"
+                      disabled={isLoading}
+                    >
+                      Ask EduBot
+                    </button>
+                  </div>
+                ))
+              ) : (
+                <div className="text-center py-4 text-gray-400 text-sm">
+                  {isLoading ? 'Loading tips...' : 'Personalized tips will appear here based on your financial data'}
                 </div>
-              ))}
+              )}
             </div>
           </div>
         </div>

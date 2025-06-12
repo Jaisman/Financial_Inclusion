@@ -1,0 +1,13 @@
+{
+  "age": 2.839812159993246e-05,
+  "employment_status": 0.345027467025987,
+  "monthly_income": 0.2606359487241228,
+  "utility_bill_payment_history": 0.05871330148874551,
+  "rental_payment_history": 0.05238952737319331,
+  "mobile_recharge_frequency": 0.008573657607564423,
+  "mobile_data_usage": 0.0041598189690117806,
+  "education_level": 0.02558519983314106,
+  "financial_literacy_score": 0.09991307608972153,
+  "loan_repayment_history": 0.13948794663373357,
+  "region": 0.005485658133179024
+}
