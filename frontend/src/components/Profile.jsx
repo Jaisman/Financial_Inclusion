@@ -1,324 +1,496 @@
-import React, { useState } from 'react';
-import { Upload, User, FileText, Phone, MapPin, Briefcase, Calendar, CreditCard, Home, Smartphone, CheckCircle } from 'lucide-react';
+import React, { useState, useEffect } from 'react';
+import {
+  User,
+  Calendar,
+  Briefcase,
+  CreditCard,
+  Home,
+  Smartphone,
+  MapPin,
+  CheckCircle,
+  XCircle
+} from 'lucide-react';
+import axios from 'axios';
+import { useNavigate } from 'react-router-dom';
 
 const ProfilePage = () => {
-  const [activeSection, setActiveSection] = useState('basic');
+  const navigate = useNavigate();
+  const userId = localStorage.getItem('userId');
+  const authToken = localStorage.getItem('authToken');
+
+  // Axios instance with auth header
+  const axiosInstance = axios.create();
+  axiosInstance.interceptors.request.use(config => {
+    if (authToken) config.headers.Authorization = `Bearer ${authToken}`;
+    return config;
+  });
+
+  const [loading, setLoading] = useState(false);
+  const [saving, setSaving] = useState(false);
+  const [error, setError] = useState('');
+
+  // formData matches schema fields
   const [formData, setFormData] = useState({
-    name: '',
+    user_id: '',
     age: '',
-    address: '',
-    occupation: '',
-    utilityBills: '',
-    rentPayments: '',
-    mobileUsage: '',
-    employmentVerification: ''
+    employment_status: '',
+    monthly_income: '',
+    utility_bill_payment_history: '',
+    rental_payment_history: '',
+    mobile_recharge_frequency: '',
+    mobile_data_usage: '',
+    education_level: '',
+    financial_literacy_score: '',
+    loan_repayment_history: '',
+    region: ''
   });
-  const [uploadedDocs, setUploadedDocs] = useState({
-    aadhaar: null,
-    pan: null,
-    utilityBill: null
-  });
+  const [formErrors, setFormErrors] = useState({});
+
+  // Fetch existing data
+  useEffect(() => {
+    if (!userId) {
+      navigate('/login');
+      return;
+    }
+    const fetchProfile = async () => {
+      setLoading(true);
+      try {
+        const resp = await axiosInstance.get(`http://localhost:8000/user/getData/${userId}`);
+        const data = resp.data;
+        setFormData({
+          user_id: data.user_id || userId,
+          age: data.age?.toString() || '',
+          employment_status: data.employment_status || '',
+          monthly_income: data.monthly_income?.toString() || '',
+          utility_bill_payment_history: data.utility_bill_payment_history?.toString() || '',
+          rental_payment_history: data.rental_payment_history?.toString() || '',
+          mobile_recharge_frequency: data.mobile_recharge_frequency?.toString() || '',
+          mobile_data_usage: data.mobile_data_usage?.toString() || '',
+          education_level: data.education_level || '',
+          financial_literacy_score: data.financial_literacy_score?.toString() || '',
+          loan_repayment_history: data.loan_repayment_history?.toString() || '',
+          region: data.region || ''
+        });
+      } catch (err) {
+        console.error('Failed to load profile:', err);
+        setError('Failed to load profile data.');
+      } finally {
+        setLoading(false);
+      }
+    };
+    fetchProfile();
+  }, [userId, navigate]);
 
   const handleInputChange = (field, value) => {
     setFormData(prev => ({ ...prev, [field]: value }));
+    setFormErrors(prev => ({ ...prev, [field]: '' }));
   };
 
-  const handleFileUpload = (docType, file) => {
-    setUploadedDocs(prev => ({ ...prev, [docType]: file }));
+  // Validation according to schema constraints
+  const validateForm = () => {
+    const errs = {};
+    // age: required, number 18-100
+    if (!formData.age.trim()) errs.age = 'Required';
+    else {
+      const n = Number(formData.age);
+      if (isNaN(n) || n < 18 || n > 100) errs.age = '18–100';
+    }
+    // employment_status
+    if (!formData.employment_status) errs.employment_status = 'Required';
+    else if (!['salaried','self-employed','unemployed'].includes(formData.employment_status))
+      errs.employment_status = 'Invalid';
+    // monthly_income
+    if (!formData.monthly_income.trim()) errs.monthly_income = 'Required';
+    else {
+      const n = Number(formData.monthly_income);
+      if (isNaN(n) || n < 0) errs.monthly_income = 'Invalid';
+    }
+    // utility_bill_payment_history: 0-100
+    if (!formData.utility_bill_payment_history.trim()) errs.utility_bill_payment_history = 'Required';
+    else {
+      const n = Number(formData.utility_bill_payment_history);
+      if (isNaN(n) || n < 0 || n > 100) errs.utility_bill_payment_history = '0–100';
+    }
+    // rental_payment_history: 0-100
+    if (!formData.rental_payment_history.trim()) errs.rental_payment_history = 'Required';
+    else {
+      const n = Number(formData.rental_payment_history);
+      if (isNaN(n) || n < 0 || n > 100) errs.rental_payment_history = '0–100';
+    }
+    // mobile_recharge_frequency: >=0
+    if (!formData.mobile_recharge_frequency.trim()) errs.mobile_recharge_frequency = 'Required';
+    else {
+      const n = Number(formData.mobile_recharge_frequency);
+      if (isNaN(n) || n < 0) errs.mobile_recharge_frequency = 'Invalid';
+    }
+    // mobile_data_usage
+    if (!formData.mobile_data_usage.trim()) errs.mobile_data_usage = 'Required';
+    else {
+      const n = Number(formData.mobile_data_usage);
+      if (isNaN(n) || n < 0) errs.mobile_data_usage = 'Invalid';
+    }
+    // education_level
+    if (!formData.education_level) errs.education_level = 'Required';
+    else if (!['High School','Diploma','Graduate','Postgraduate'].includes(formData.education_level))
+      errs.education_level = 'Invalid';
+    // financial_literacy_score: 0–10
+    if (!formData.financial_literacy_score.trim()) errs.financial_literacy_score = 'Required';
+    else {
+      const n = Number(formData.financial_literacy_score);
+      if (isNaN(n) || n < 0 || n > 10) errs.financial_literacy_score = '0–10';
+    }
+    // loan_repayment_history: 0–100
+    if (!formData.loan_repayment_history.trim()) errs.loan_repayment_history = 'Required';
+    else {
+      const n = Number(formData.loan_repayment_history);
+      if (isNaN(n) || n < 0 || n > 100) errs.loan_repayment_history = '0–100';
+    }
+    // region
+    if (!formData.region) errs.region = 'Required';
+    else if (!['urban','semi-urban','rural'].includes(formData.region))
+      errs.region = 'Invalid';
+
+    setFormErrors(errs);
+    return Object.keys(errs).length === 0;
   };
 
-  const sections = [
-    { id: 'basic', label: 'Basic Details', icon: User },
-    { id: 'alternative', label: 'Alternative Data', icon: FileText },
-    { id: 'documents', label: 'Upload Documents', icon: Upload }
-  ];
+  // Compute completion %: count filled fields (excluding user_id)
+  const computeCompletion = () => {
+    const keys = [
+      'age','employment_status','monthly_income',
+      'utility_bill_payment_history','rental_payment_history',
+      'mobile_recharge_frequency','mobile_data_usage',
+      'education_level','financial_literacy_score',
+      'loan_repayment_history','region'
+    ];
+    let filled = 0;
+    keys.forEach(k => {
+      if (formData[k] !== '' && formData[k] !== null) filled++;
+    });
+    return Math.round((filled / keys.length) * 100);
+  };
+  const completion = computeCompletion();
+
+  const handleSave = async () => {
+    if (!validateForm()) {
+      return;
+    }
+    setSaving(true);
+    try {
+      const payload = {
+        age: Number(formData.age),
+        employment_status: formData.employment_status,
+        monthly_income: Number(formData.monthly_income),
+        utility_bill_payment_history: Number(formData.utility_bill_payment_history),
+        rental_payment_history: Number(formData.rental_payment_history),
+        mobile_recharge_frequency: Number(formData.mobile_recharge_frequency),
+        mobile_data_usage: Number(formData.mobile_data_usage),
+        education_level: formData.education_level,
+        financial_literacy_score: Number(formData.financial_literacy_score),
+        loan_repayment_history: Number(formData.loan_repayment_history),
+        region: formData.region
+      };
+      await axiosInstance.put(`http://localhost:8000/user/update/${userId}`, payload);
+      alert('Profile saved');
+    } catch (err) {
+      console.error('Error saving profile:', err);
+      alert('Save failed');
+    } finally {
+      setSaving(false);
+    }
+  };
+
+  if (loading) {
+    return (
+      <div className="min-h-screen flex items-center justify-center">
+        <p className="text-gray-600">Loading profile...</p>
+      </div>
+    );
+  }
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-blue-50 via-indigo-50 to-purple-50">
       <div className="container mx-auto px-4 py-8">
         <div className="max-w-4xl mx-auto">
           {/* Header */}
-          <div className="text-center mb-8">
-            <h1 className="text-4xl font-bold text-gray-800 mb-2">Profile Setup</h1>
-            <p className="text-gray-600">Complete your profile for better financial services</p>
+          <div className="text-center mb-6">
+            <h1 className="text-3xl font-bold text-gray-800">Profile</h1>
+            <p className="text-gray-600">Complete your profile for financial inclusion</p>
           </div>
+          {/* Completion Bar */}
+          <div className="w-full bg-gray-200 rounded-full h-3 mb-4 overflow-hidden">
+            <div
+              className="bg-green-500 h-3 rounded-full transition-width duration-500"
+              style={{ width: `${completion}%` }}
+            />
+          </div>
+          {error && <p className="text-red-600 mb-4">{error}</p>}
 
-          {/* Navigation Tabs */}
-          <div className="flex flex-wrap justify-center mb-8 bg-white rounded-2xl p-2 shadow-lg">
-            {sections.map((section) => {
-              const IconComponent = section.icon;
-              return (
-                <button
-                  key={section.id}
-                  onClick={() => setActiveSection(section.id)}
-                  className={`flex items-center space-x-2 px-6 py-3 rounded-xl transition-all duration-300 font-medium ${
-                    activeSection === section.id
-                      ? 'bg-gradient-to-r from-blue-500 to-purple-600 text-white shadow-lg transform scale-105'
-                      : 'text-gray-600 hover:text-blue-600 hover:bg-blue-50'
+          {/* Two-column cards */}
+          <div className="flex flex-col md:flex-row gap-6">
+            {/* Left Card: Basic & Income */}
+            <div className="flex-1 bg-white rounded-2xl shadow-lg p-6">
+              {/* user_id (readonly) */}
+              <div className="mb-4">
+                <label className="block text-sm font-medium text-gray-700">User ID</label>
+                <input
+                  type="text"
+                  value={formData.user_id}
+                  readOnly
+                  className="mt-1 w-full px-4 py-2 border border-gray-300 bg-gray-100 rounded-xl"
+                />
+              </div>
+              {/* Age */}
+              <div className="mb-4">
+                <label className="flex items-center space-x-2 text-sm font-medium text-gray-700">
+                  <Calendar size={16} /><span>Age</span>
+                </label>
+                <input
+                  type="number"
+                  min="18"
+                  max="100"
+                  value={formData.age}
+                  
+                  className={`mt-1 w-full px-4 py-2 border rounded-xl focus:ring-2 focus:ring-blue-500 ${
+                    formErrors.age ? 'border-red-500 bg-red-50' : 'border-gray-300'
+                  }`}
+                />
+                {formErrors.age && (
+                  <p className="text-red-600 text-sm flex items-center mt-1">
+                    <XCircle size={14} className="mr-1" />{formErrors.age}
+                  </p>
+                )}
+              </div>
+              {/* Employment Status */}
+              <div className="mb-4">
+                <label className="flex items-center space-x-2 text-sm font-medium text-gray-700">
+                  <Briefcase size={16} /><span>Employment Status</span>
+                </label>
+                 <input
+                  type="text"
+                  
+                  value={formData.employment_status}
+                  disabled
+                  className={`mt-1 w-full px-4 py-2 border rounded-xl focus:ring-2 focus:ring-blue-500 ${
+                    formErrors.age ? 'border-red-500 bg-red-50' : 'border-gray-300'
+                  }`}
+                />
+                
+                {formErrors.employment_status && (
+                  <p className="text-red-600 text-sm flex items-center mt-1">
+                    <XCircle size={14} className="mr-1" />{formErrors.employment_status}
+                  </p>
+                )}
+              </div>
+              {/* Monthly Income */}
+              <div className="mb-4">
+                <label className="flex items-center space-x-2 text-sm font-medium text-gray-700">
+                  <CreditCard size={16} /><span>Monthly Income (INR)</span>
+                </label>
+                <input
+                  type="number"
+                  min="0"
+                  value={formData.monthly_income}
+                  disabled
+                  className={`mt-1 w-full px-4 py-2 border rounded-xl focus:ring-2 focus:ring-blue-500 ${
+                    formErrors.monthly_income ? 'border-red-500 bg-red-50' : 'border-gray-300'
+                  }`}
+                />
+                {formErrors.monthly_income && (
+                  <p className="text-red-600 text-sm flex items-center mt-1">
+                    <XCircle size={14} className="mr-1" />{formErrors.monthly_income}
+                  </p>
+                )}
+              </div>
+              {/* Region */}
+              <div className="mb-4">
+                <label className="flex items-center space-x-2 text-sm font-medium text-gray-700">
+                  <MapPin size={16} /><span>Region</span>
+                </label>
+                
+                <select
+                  value={formData.region}
+                 disabled
+                  className={`mt-1 w-full px-4 py-2 border rounded-xl focus:ring-2 focus:ring-blue-500 ${
+                    formErrors.region ? 'border-red-500 bg-red-50' : 'border-gray-300'
                   }`}
                 >
-                  <IconComponent size={20} />
-                  <span>{section.label}</span>
-                </button>
-              );
-            })}
-          </div>
+                  <option value="">Select</option>
+                  <option value="urban">Urban</option>
+                  <option value="semi-urban">Semi-urban</option>
+                  <option value="rural">Rural</option>
+                </select>
+                {formErrors.region && (
+                  <p className="text-red-600 text-sm flex items-center mt-1">
+                    <XCircle size={14} className="mr-1" />{formErrors.region}
+                  </p>
+                )}
+              </div>
+            </div>
 
-          {/* Content Card */}
-          <div className="bg-white rounded-3xl shadow-2xl overflow-hidden">
-            <div className="p-8">
-              {/* Basic Details Section */}
-              {activeSection === 'basic' && (
-                <div className="space-y-6">
-                  <div className="flex items-center space-x-3 mb-6">
-                    <div className="p-3 bg-blue-100 rounded-xl">
-                      <User className="text-blue-600" size={24} />
-                    </div>
-                    <h2 className="text-2xl font-bold text-gray-800">Basic Information</h2>
-                  </div>
-
-                  <div className="grid md:grid-cols-2 gap-6">
-                    <div className="space-y-2">
-                      <label className="flex items-center space-x-2 text-sm font-semibold text-gray-700">
-                        <User size={16} />
-                        <span>Full Name</span>
-                      </label>
-                      <input
-                        type="text"
-                        value={formData.name}
-                        onChange={(e) => handleInputChange('name', e.target.value)}
-                        className="w-full px-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all duration-200"
-                        placeholder="Enter your full name"
-                      />
-                    </div>
-
-                    <div className="space-y-2">
-                      <label className="flex items-center space-x-2 text-sm font-semibold text-gray-700">
-                        <Calendar size={16} />
-                        <span>Age</span>
-                      </label>
-                      <input
-                        type="number"
-                        value={formData.age}
-                        onChange={(e) => handleInputChange('age', e.target.value)}
-                        className="w-full px-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all duration-200"
-                        placeholder="Enter your age"
-                      />
-                    </div>
-
-                    <div className="space-y-2">
-                      <label className="flex items-center space-x-2 text-sm font-semibold text-gray-700">
-                        <MapPin size={16} />
-                        <span>Address</span>
-                      </label>
-                      <textarea
-                        value={formData.address}
-                        onChange={(e) => handleInputChange('address', e.target.value)}
-                        className="w-full px-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all duration-200 resize-none"
-                        rows="3"
-                        placeholder="Enter your complete address"
-                      />
-                    </div>
-
-                    <div className="space-y-2">
-                      <label className="flex items-center space-x-2 text-sm font-semibold text-gray-700">
-                        <Briefcase size={16} />
-                        <span>Occupation</span>
-                      </label>
-                      <input
-                        type="text"
-                        value={formData.occupation}
-                        onChange={(e) => handleInputChange('occupation', e.target.value)}
-                        className="w-full px-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all duration-200"
-                        placeholder="Enter your occupation"
-                      />
-                    </div>
-                  </div>
+            {/* Right Card: Alternative Data */}
+            <div className="flex-1 bg-white rounded-2xl shadow-lg p-6">
+              {/* Utility Bill History slider */}
+              <div className="mb-6">
+                <label className="flex items-center space-x-2 text-sm font-medium text-gray-700">
+                  <Home size={16} /><span>Utility Bill History (%)</span>
+                </label>
+                <div className="flex items-center space-x-3 mt-1">
+                  <input
+                    type="range"
+                    min="0"
+                    max="100"
+                    value={formData.utility_bill_payment_history}
+                   disabled
+                    className="flex-1"
+                  />
+                  <span className="w-12 text-right">{formData.utility_bill_payment_history || 0}%</span>
                 </div>
-              )}
-
-              {/* Alternative Data Section */}
-              {activeSection === 'alternative' && (
-                <div className="space-y-6">
-                  <div className="flex items-center space-x-3 mb-6">
-                    <div className="p-3 bg-purple-100 rounded-xl">
-                      <FileText className="text-purple-600" size={24} />
-                    </div>
-                    <h2 className="text-2xl font-bold text-gray-800">Alternative Data Entry</h2>
-                  </div>
-
-                  <div className="grid md:grid-cols-2 gap-6">
-                    <div className="space-y-2">
-                      <label className="flex items-center space-x-2 text-sm font-semibold text-gray-700">
-                        <CreditCard size={16} />
-                        <span>Utility Bill History</span>
-                      </label>
-                      <textarea
-                        value={formData.utilityBills}
-                        onChange={(e) => handleInputChange('utilityBills', e.target.value)}
-                        className="w-full px-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-purple-500 focus:border-transparent transition-all duration-200 resize-none"
-                        rows="4"
-                        placeholder="Describe your utility payment history (electricity, water, gas bills)"
-                      />
-                    </div>
-
-                    <div className="space-y-2">
-                      <label className="flex items-center space-x-2 text-sm font-semibold text-gray-700">
-                        <Home size={16} />
-                        <span>Rent Payments</span>
-                      </label>
-                      <textarea
-                        value={formData.rentPayments}
-                        onChange={(e) => handleInputChange('rentPayments', e.target.value)}
-                        className="w-full px-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-purple-500 focus:border-transparent transition-all duration-200 resize-none"
-                        rows="4"
-                        placeholder="Provide details about your rent payment history"
-                      />
-                    </div>
-
-                    <div className="space-y-2">
-                      <label className="flex items-center space-x-2 text-sm font-semibold text-gray-700">
-                        <Smartphone size={16} />
-                        <span>Mobile Usage Patterns</span>
-                      </label>
-                      <textarea
-                        value={formData.mobileUsage}
-                        onChange={(e) => handleInputChange('mobileUsage', e.target.value)}
-                        className="w-full px-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-purple-500 focus:border-transparent transition-all duration-200 resize-none"
-                        rows="4"
-                        placeholder="Describe your mobile recharge patterns and usage"
-                      />
-                    </div>
-
-                    <div className="space-y-2">
-                      <label className="flex items-center space-x-2 text-sm font-semibold text-gray-700">
-                        <Briefcase size={16} />
-                        <span>Employment Verification</span>
-                      </label>
-                      <textarea
-                        value={formData.employmentVerification}
-                        onChange={(e) => handleInputChange('employmentVerification', e.target.value)}
-                        className="w-full px-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-purple-500 focus:border-transparent transition-all duration-200 resize-none"
-                        rows="4"
-                        placeholder="Provide employment details, salary information, or business details"
-                      />
-                    </div>
-                  </div>
+                {formErrors.utility_bill_payment_history && (
+                  <p className="text-red-600 text-sm flex items-center mt-1">
+                    <XCircle size={14} className="mr-1" />{formErrors.utility_bill_payment_history}
+                  </p>
+                )}
+              </div>
+              {/* Rental Payment History slider */}
+              <div className="mb-6">
+                <label className="flex items-center space-x-2 text-sm font-medium text-gray-700">
+                  <Home size={16} /><span>Rent Payment History (%)</span>
+                </label>
+                <div className="flex items-center space-x-3 mt-1">
+                  <input
+                    type="range"
+                    min="0"
+                    max="100"
+                    value={formData.rental_payment_history}
+                    disabled
+                    className="flex-1"
+                  />
+                  <span className="w-12 text-right">{formData.rental_payment_history || 0}%</span>
                 </div>
-              )}
-
-              {/* Document Upload Section */}
-              {activeSection === 'documents' && (
-                <div className="space-y-6">
-                  <div className="flex items-center space-x-3 mb-6">
-                    <div className="p-3 bg-green-100 rounded-xl">
-                      <Upload className="text-green-600" size={24} />
-                    </div>
-                    <h2 className="text-2xl font-bold text-gray-800">KYC Document Upload</h2>
-                  </div>
-
-                  <div className="grid md:grid-cols-1 gap-6">
-                    {/* Aadhaar Upload */}
-                    <div className="border-2 border-dashed border-gray-300 rounded-xl p-6 hover:border-blue-400 transition-colors duration-200">
-                      <div className="text-center">
-                        <div className="flex items-center justify-center space-x-2 mb-3">
-                          <FileText className="text-blue-600" size={24} />
-                          <h3 className="text-lg font-semibold text-gray-800">Aadhaar Card</h3>
-                          {uploadedDocs.aadhaar && <CheckCircle className="text-green-600" size={20} />}
-                        </div>
-                        <input
-                          type="file"
-                          accept=".pdf,.jpg,.jpeg,.png"
-                          onChange={(e) => handleFileUpload('aadhaar', e.target.files[0])}
-                          className="hidden"
-                          id="aadhaar-upload"
-                        />
-                        <label htmlFor="aadhaar-upload" className="cursor-pointer">
-                          <div className="bg-blue-50 hover:bg-blue-100 text-blue-600 px-6 py-3 rounded-lg inline-flex items-center space-x-2 transition-colors duration-200">
-                            <Upload size={20} />
-                            <span>{uploadedDocs.aadhaar ? 'Change File' : 'Upload Aadhaar'}</span>
-                          </div>
-                        </label>
-                        {uploadedDocs.aadhaar && (
-                          <p className="text-sm text-green-600 mt-2">✓ {uploadedDocs.aadhaar.name}</p>
-                        )}
-                      </div>
-                    </div>
-
-                    {/* PAN Upload */}
-                    <div className="border-2 border-dashed border-gray-300 rounded-xl p-6 hover:border-purple-400 transition-colors duration-200">
-                      <div className="text-center">
-                        <div className="flex items-center justify-center space-x-2 mb-3">
-                          <CreditCard className="text-purple-600" size={24} />
-                          <h3 className="text-lg font-semibold text-gray-800">PAN Card</h3>
-                          {uploadedDocs.pan && <CheckCircle className="text-green-600" size={20} />}
-                        </div>
-                        <input
-                          type="file"
-                          accept=".pdf,.jpg,.jpeg,.png"
-                          onChange={(e) => handleFileUpload('pan', e.target.files[0])}
-                          className="hidden"
-                          id="pan-upload"
-                        />
-                        <label htmlFor="pan-upload" className="cursor-pointer">
-                          <div className="bg-purple-50 hover:bg-purple-100 text-purple-600 px-6 py-3 rounded-lg inline-flex items-center space-x-2 transition-colors duration-200">
-                            <Upload size={20} />
-                            <span>{uploadedDocs.pan ? 'Change File' : 'Upload PAN'}</span>
-                          </div>
-                        </label>
-                        {uploadedDocs.pan && (
-                          <p className="text-sm text-green-600 mt-2">✓ {uploadedDocs.pan.name}</p>
-                        )}
-                      </div>
-                    </div>
-
-                    {/* Utility Bill Upload */}
-                    <div className="border-2 border-dashed border-gray-300 rounded-xl p-6 hover:border-green-400 transition-colors duration-200">
-                      <div className="text-center">
-                        <div className="flex items-center justify-center space-x-2 mb-3">
-                          <FileText className="text-green-600" size={24} />
-                          <h3 className="text-lg font-semibold text-gray-800">Utility Bill</h3>
-                          {uploadedDocs.utilityBill && <CheckCircle className="text-green-600" size={20} />}
-                        </div>
-                        <input
-                          type="file"
-                          accept=".pdf,.jpg,.jpeg,.png"
-                          onChange={(e) => handleFileUpload('utilityBill', e.target.files[0])}
-                          className="hidden"
-                          id="utility-upload"
-                        />
-                        <label htmlFor="utility-upload" className="cursor-pointer">
-                          <div className="bg-green-50 hover:bg-green-100 text-green-600 px-6 py-3 rounded-lg inline-flex items-center space-x-2 transition-colors duration-200">
-                            <Upload size={20} />
-                            <span>{uploadedDocs.utilityBill ? 'Change File' : 'Upload Utility Bill'}</span>
-                          </div>
-                        </label>
-                        {uploadedDocs.utilityBill && (
-                          <p className="text-sm text-green-600 mt-2">✓ {uploadedDocs.utilityBill.name}</p>
-                        )}
-                      </div>
-                    </div>
-                  </div>
-
-                  <div className="bg-blue-50 border border-blue-200 rounded-xl p-4 mt-6">
-                    <p className="text-sm text-blue-800">
-                      <strong>Accepted formats:</strong> PDF, JPG, JPEG, PNG. Maximum file size: 5MB per document.
-                    </p>
-                  </div>
+                {formErrors.rental_payment_history && (
+                  <p className="text-red-600 text-sm flex items-center mt-1">
+                    <XCircle size={14} className="mr-1" />{formErrors.rental_payment_history}
+                  </p>
+                )}
+              </div>
+              {/* Mobile Recharge Frequency */}
+              <div className="mb-4">
+                <label className="flex items-center space-x-2 text-sm font-medium text-gray-700">
+                  <Smartphone size={16} /><span>Mobile Recharge Frequency (/month)</span>
+                </label>
+                <input
+                  type="number"
+                  disabled
+                  min="0"
+                  value={formData.mobile_recharge_frequency}
+                  
+                  className={`mt-1 w-full px-4 py-2 border rounded-xl focus:ring-2 focus:ring-blue-500 ${
+                    formErrors.mobile_recharge_frequency ? 'border-red-500 bg-red-50' : 'border-gray-300'
+                  }`}
+                />
+                {formErrors.mobile_recharge_frequency && (
+                  <p className="text-red-600 text-sm flex items-center mt-1">
+                    <XCircle size={14} className="mr-1" />{formErrors.mobile_recharge_frequency}
+                  </p>
+                )}
+              </div>
+              {/* Mobile Data Usage */}
+              <div className="mb-4">
+                <label className="flex items-center space-x-2 text-sm font-medium text-gray-700">
+                  <Smartphone size={16} /><span>Mobile Data Usage (GB/month)</span>
+                </label>
+                <input
+                disabled
+                  type="number"
+                  min="0"
+                  step="0.1"
+                  value={formData.mobile_data_usage}
+                  
+                  className={`mt-1 w-full px-4 py-2 border rounded-xl focus:ring-2 focus:ring-blue-500 ${
+                    formErrors.mobile_data_usage ? 'border-red-500 bg-red-50' : 'border-gray-300'
+                  }`}
+                />
+                {formErrors.mobile_data_usage && (
+                  <p className="text-red-600 text-sm flex items-center mt-1">
+                    <XCircle size={14} className="mr-1" />{formErrors.mobile_data_usage}
+                  </p>
+                )}
+              </div>
+              {/* Education Level */}
+              <div className="mb-4">
+                <label className="flex items-center space-x-2 text-sm font-medium text-gray-700">
+                  <Briefcase size={16} /><span>Education Level</span>
+                </label>
+                <select
+                  value={formData.education_level}
+                 disabled
+                  className={`mt-1 w-full px-4 py-2 border rounded-xl focus:ring-2 focus:ring-blue-500 ${
+                    formErrors.education_level ? 'border-red-500 bg-red-50' : 'border-gray-300'
+                  }`}
+                >
+                  <option value="">Select</option>
+                  <option value="High School">High School</option>
+                  <option value="Diploma">Diploma</option>
+                  <option value="Graduate">Graduate</option>
+                  <option value="Postgraduate">Postgraduate</option>
+                </select>
+                {formErrors.education_level && (
+                  <p className="text-red-600 text-sm flex items-center mt-1">
+                    <XCircle size={14} className="mr-1" />{formErrors.education_level}
+                  </p>
+                )}
+              </div>
+              {/* Financial Literacy Score slider */}
+              <div className="mb-6">
+                <label className="flex items-center space-x-2 text-sm font-medium text-gray-700">
+                  <CreditCard size={16} /><span>Financial Literacy Score (0–10)</span>
+                </label>
+                <div className="flex items-center space-x-3 mt-1">
+                  <input
+                    type="range"
+                    disabled
+                    min="0"
+                    max="10"
+                    value={formData.financial_literacy_score}
+                    
+                    className="flex-1"
+                  />
+                  <span className="w-8 text-right">{formData.financial_literacy_score || 0}</span>
                 </div>
-              )}
-
-              {/* Action Buttons */}
-              <div className="flex flex-col sm:flex-row gap-4 mt-8 pt-6 border-t border-gray-200">
-                <button className="flex-1 bg-gradient-to-r from-blue-500 to-purple-600 text-white px-8 py-3 rounded-xl font-semibold hover:from-blue-600 hover:to-purple-700 transition-all duration-200 transform hover:scale-105 shadow-lg">
-                  Save Progress
-                </button>
-                <button className="flex-1 bg-gradient-to-r from-green-500 to-teal-600 text-white px-8 py-3 rounded-xl font-semibold hover:from-green-600 hover:to-teal-700 transition-all duration-200 transform hover:scale-105 shadow-lg">
-                  Submit Application
-                </button>
+                {formErrors.financial_literacy_score && (
+                  <p className="text-red-600 text-sm flex items-center mt-1">
+                    <XCircle size={14} className="mr-1" />{formErrors.financial_literacy_score}
+                  </p>
+                )}
+              </div>
+              {/* Loan Repayment History slider */}
+              <div className="mb-6">
+                <label className="flex items-center space-x-2 text-sm font-medium text-gray-700">
+                  <Home size={16} /><span>Loan Repayment History (%)</span>
+                </label>
+                <div className="flex items-center space-x-3 mt-1">
+                  <input
+                    type="range"
+                    min="0"
+                    max="100"
+                    disabled
+                    value={formData.loan_repayment_history}
+                    
+                    className="flex-1"
+                  />
+                  <span className="w-12 text-right">{formData.loan_repayment_history || 0}%</span>
+                </div>
+                {formErrors.loan_repayment_history && (
+                  <p className="text-red-600 text-sm flex items-center mt-1">
+                    <XCircle size={14} className="mr-1" />{formErrors.loan_repayment_history}
+                  </p>
+                )}
               </div>
             </div>
           </div>
+
+    
         </div>
       </div>
     </div>

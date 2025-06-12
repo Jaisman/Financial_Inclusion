@@ -14,7 +14,7 @@ app.use(cors({
     credentials:true
 }));
 
-connectMongoDB("mongodb+srv://jaismanjhinger:financial_inclusion@cluster0.icaoavz.mongodb.net/")
+connectMongoDB("mongodb+srv://jaismanjhinger:financial_inclusion@cluster0.icaoavz.mongodb.net/users")
 .then(()=>console.log("MongoDB connected"));
 
 app.use(cookieParser());
