@@ -17,17 +17,17 @@ const WomanAvatar = ({ size = 96 }) => (
   <svg width={size} height={size} viewBox="0 0 100 100">
     <defs>
       <linearGradient id="skinGradient1" x1="0%" y1="0%" x2="100%" y2="100%">
-        <stop offset="0%" style={{stopColor:"#FDB5A6", stopOpacity:1}} />
-        <stop offset="100%" style={{stopColor:"#F4A49C", stopOpacity:1}} />
+        <stop offset="0%" style={{stopColor:"#2A2A2A", stopOpacity:1}} />
+        <stop offset="100%" style={{stopColor:"#4A4A4A", stopOpacity:1}} />
       </linearGradient>
       <linearGradient id="hairGradient1" x1="0%" y1="0%" x2="100%" y2="100%">
-        <stop offset="0%" style={{stopColor:"#8B4513", stopOpacity:1}} />
-        <stop offset="100%" style={{stopColor:"#654321", stopOpacity:1}} />
+        <stop offset="0%" style={{stopColor:"#654321", stopOpacity:1}} />
+        <stop offset="100%" style={{stopColor:"#36454F", stopOpacity:1}} />
       </linearGradient>
     </defs>
     
     {/* Face background */}
-    <circle cx="50" cy="50" r="45" fill="#FFE5D4" stroke="#E0C3A8" strokeWidth="2"/>
+    <circle cx="50" cy="50" r="45" fill="#2A2A2A" stroke="#4A4A4A" strokeWidth="2"/>
     
     {/* Face shape */}
     <ellipse cx="50" cy="55" rx="32" ry="38" fill="url(#skinGradient1)"/>
@@ -41,12 +41,12 @@ const WomanAvatar = ({ size = 96 }) => (
     <path d="M65 40 Q70 35 75 40" stroke="url(#hairGradient1)" strokeWidth="3" fill="none"/>
     
     {/* Eyes */}
-    <ellipse cx="42" cy="48" rx="4" ry="3" fill="white"/>
-    <ellipse cx="58" cy="48" rx="4" ry="3" fill="white"/>
+    <ellipse cx="42" cy="48" rx="4" ry="3" fill="#36454F"/>
+    <ellipse cx="58" cy="48" rx="4" ry="3" fill="#36454F"/>
     <circle cx="42" cy="48" r="2" fill="#4A4A4A"/>
     <circle cx="58" cy="48" r="2" fill="#4A4A4A"/>
-    <circle cx="42.5" cy="47.5" r="0.8" fill="white"/>
-    <circle cx="58.5" cy="47.5" r="0.8" fill="white"/>
+    <circle cx="42.5" cy="47.5" r="0.8" fill="#B0C4DE"/>
+    <circle cx="58.5" cy="47.5" r="0.8" fill="#B0C4DE"/>
     
     {/* Eyebrows */}
     <path d="M38 43 Q42 41 46 43" stroke="#654321" strokeWidth="2" fill="none"/>
@@ -82,7 +82,7 @@ const ManAvatar = ({ size = 96 }) => (
     </defs>
     
     {/* Face background */}
-    <circle cx="50" cy="50" r="45" fill="#F5E6D3" stroke="#D4A574" strokeWidth="2"/>
+    <circle cx="50" cy="50" r="45" fill="#2A2A2A" stroke="#4A4A4A" strokeWidth="2"/>
     
     {/* Face shape */}
     <ellipse cx="50" cy="55" rx="32" ry="38" fill="url(#skinGradient2)"/>
@@ -98,12 +98,12 @@ const ManAvatar = ({ size = 96 }) => (
     <line x1="50" y1="42" x2="50" y2="46" stroke="#333333" strokeWidth="2"/>
     
     {/* Eyes behind glasses */}
-    <ellipse cx="42" cy="48" rx="4" ry="3" fill="white"/>
-    <ellipse cx="58" cy="48" rx="4" ry="3" fill="white"/>
+    <ellipse cx="42" cy="48" rx="4" ry="3" fill="#36454F"/>
+    <ellipse cx="58" cy="48" rx="4" ry="3" fill="#36454F"/>
     <circle cx="42" cy="48" r="2" fill="#2D5AA0"/>
     <circle cx="58" cy="48" r="2" fill="#2D5AA0"/>
-    <circle cx="42.5" cy="47.5" r="0.8" fill="white"/>
-    <circle cx="58.5" cy="47.5" r="0.8" fill="white"/>
+    <circle cx="42.5" cy="47.5" r="0.8" fill="#B0C4DE"/>
+    <circle cx="58.5" cy="47.5" r="0.8" fill="#B0C4DE"/>
     
     {/* Eyebrows */}
     <path d="M38 40 Q42 38 46 40" stroke="#2F2F2F" strokeWidth="2" fill="none"/>
@@ -135,7 +135,7 @@ const ElderlyWomanAvatar = ({ size = 96 }) => (
     </defs>
     
     {/* Face background */}
-    <circle cx="50" cy="50" r="45" fill="#FAF0E6" stroke="#D4A574" strokeWidth="2"/>
+    <circle cx="50" cy="50" r="45" fill="#2A2A2A" stroke="#4A4A4A" strokeWidth="2"/>
     
     {/* Face shape */}
     <ellipse cx="50" cy="55" rx="32" ry="38" fill="url(#skinGradient3)"/>
@@ -150,12 +150,12 @@ const ElderlyWomanAvatar = ({ size = 96 }) => (
     <circle cx="50" cy="25" r="3" fill="#8B4513"/>
     
     {/* Eyes with slight wrinkles */}
-    <ellipse cx="42" cy="48" rx="4" ry="3" fill="white"/>
-    <ellipse cx="58" cy="48" rx="4" ry="3" fill="white"/>
+    <ellipse cx="42" cy="48" rx="4" ry="3" fill="#36454F"/>
+    <ellipse cx="58" cy="48" rx="4" ry="3" fill="#36454F"/>
     <circle cx="42" cy="48" r="2" fill="#654321"/>
     <circle cx="58" cy="48" r="2" fill="#654321"/>
-    <circle cx="42.5" cy="47.5" r="0.8" fill="white"/>
-    <circle cx="58.5" cy="47.5" r="0.8" fill="white"/>
+    <circle cx="42.5" cy="47.5" r="0.8" fill="#B0C4DE"/>
+    <circle cx="58.5" cy="47.5" r="0.8" fill="#B0C4DE"/>
     
     {/* Smile lines */}
     <path d="M36 45 Q39 43 42 45" stroke="#D4A574" strokeWidth="1" fill="none"/>
@@ -360,7 +360,7 @@ export default function NGOPage() {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-blue-50 via-indigo-50 to-purple-50">
+    <div className="min-h-screen bg-gradient-to-br from-slate-900 via-blue-900 to-indigo-900 text-white">
       <div className="container mx-auto px-4 py-8">
         <div className="max-w-6xl mx-auto">
           {/* Header */}
@@ -370,8 +370,8 @@ export default function NGOPage() {
                 <Handshake className="w-12 h-12 text-white" />
               </div>
             </div>
-            <h1 className="text-4xl font-bold text-gray-800 mb-2">Financial Inclusion Network</h1>
-            <p className="text-gray-600 text-lg">Empowering communities through innovative financial solutions</p>
+            <h1 className="text-4xl font-bold text-gray-200 mb-2">Financial Inclusion Network</h1>
+            <p className="text-gray-300 text-lg">Empowering communities through innovative financial solutions</p>
           </div>
 
           {/* Stats Bar */}
@@ -382,15 +382,15 @@ export default function NGOPage() {
               { number: "₹5Cr+", label: "Funding Provided", color: "purple" },
               { number: "12", label: "States Covered", color: "orange" }
             ].map((stat, index) => (
-              <div key={index} className="bg-white rounded-2xl p-4 text-center shadow-lg hover:shadow-xl transition-all duration-300 hover:scale-105">
-                <div className={`text-2xl font-bold text-${stat.color}-600 mb-1`}>{stat.number}</div>
-                <div className="text-gray-600 text-sm">{stat.label}</div>
+              <div key={index} className="bg-slate-800/50 rounded-2xl p-4 text-center shadow-lg hover:shadow-xl transition-all duration-300 hover:scale-105">
+                <div className={`text-2xl font-bold text-${stat.color}-400 mb-1`}>{stat.number}</div>
+                <div className="text-gray-300 text-sm">{stat.label}</div>
               </div>
             ))}
           </div>
 
           {/* Navigation Tabs */}
-          <div className="flex flex-wrap justify-center mb-8 bg-white rounded-2xl p-2 shadow-lg">
+          <div className="flex flex-wrap justify-center mb-8 bg-slate-800/50 rounded-2xl p-2 shadow-lg">
             {sections.map((section) => {
               const IconComponent = section.icon;
               return (
@@ -400,7 +400,7 @@ export default function NGOPage() {
                   className={`flex items-center space-x-2 px-6 py-3 rounded-xl transition-all duration-300 font-medium ${
                     activeSection === section.id
                       ? 'bg-gradient-to-r from-blue-500 to-purple-600 text-white shadow-lg transform scale-105'
-                      : 'text-gray-600 hover:text-blue-600 hover:bg-blue-50'
+                      : 'text-gray-300 hover:text-blue-600 hover:bg-slate-700/50'
                   }`}
                 >
                   <IconComponent size={20} />
@@ -411,49 +411,49 @@ export default function NGOPage() {
           </div>
 
           {/* Content Card */}
-          <div className="bg-white rounded-3xl shadow-2xl overflow-hidden">
+          <div className="bg-slate-900 rounded-3xl shadow-2xl overflow-hidden">
             <div className="p-8">
               
               {/* Programs Section */}
               {activeSection === 'programs' && (
                 <div className="space-y-6">
                   <div className="flex items-center space-x-3 mb-6">
-                    <div className="p-3 bg-blue-100 rounded-xl">
-                      <Target className="text-blue-600" size={24} />
+                    <div className="p-3 bg-blue-900/20 rounded-xl">
+                      <Target className="text-blue-400" size={24} />
                     </div>
-                    <h2 className="text-2xl font-bold text-gray-800">Our Impact Programs</h2>
+                    <h2 className="text-2xl font-bold text-gray-200">Our Impact Programs</h2>
                   </div>
 
                   <div className="grid md:grid-cols-3 gap-6">
                     {programs.map((program) => {
                       const IconComponent = program.icon;
                       return (
-                        <div key={program.id} className={`border-2 border-gray-200 rounded-2xl p-6 hover:border-${program.color}-400 transition-all duration-300 hover:shadow-lg hover:scale-105`}>
+                        <div key={program.id} className={`border-2 border-slate-700 rounded-2xl p-6 hover:border-${program.color}-400 transition-all duration-300 hover:shadow-lg hover:scale-105`}>
                           <div className="flex items-center mb-4">
-                            <div className={`bg-${program.color}-100 rounded-xl p-3 mr-4`}>
-                              <IconComponent className={`w-6 h-6 text-${program.color}-600`} />
+                            <div className={`bg-${program.color}-900/20 rounded-xl p-3 mr-4`}>
+                              <IconComponent className={`w-6 h-6 text-${program.color}-400`} />
                             </div>
-                            <span className={`text-xs bg-${program.color}-50 text-${program.color}-600 px-2 py-1 rounded-full font-medium`}>
+                            <span className={`text-xs bg-${program.color}-900/20 text-${program.color}-400 px-2 py-1 rounded-full font-medium`}>
                               {program.category}
                             </span>
                           </div>
                           
-                          <h3 className="text-lg font-semibold mb-2">{program.title}</h3>
-                          <p className="text-gray-600 mb-4">{program.description}</p>
+                          <h3 className="text-lg font-semibold text-gray-200 mb-2">{program.title}</h3>
+                          <p className="text-gray-300 mb-4">{program.description}</p>
                           
                           <div className="mb-4">
                             <div className="flex justify-between text-sm mb-2">
-                              <span className="text-gray-600">Progress</span>
-                              <span className="font-medium">{program.progress}%</span>
+                              <span className="text-gray-300">Progress</span>
+                              <span className="font-medium text-gray-200">{program.progress}%</span>
                             </div>
-                            <div className="w-full bg-gray-200 rounded-full h-2">
+                            <div className="w-full bg-slate-700 rounded-full h-2">
                               <div className={`bg-${program.color}-500 h-2 rounded-full transition-all duration-500`} style={{ width: `${program.progress}%` }}></div>
                             </div>
                           </div>
                           
                           <div className="flex justify-between items-center">
-                            <span className="text-sm text-green-600 font-medium">{program.impact}</span>
-                            <button className={`text-${program.color}-600 text-sm font-medium flex items-center hover:scale-105 transition-transform duration-200`}>
+                            <span className="text-sm text-green-400 font-medium">{program.impact}</span>
+                            <button className={`text-${program.color}-400 text-sm font-medium flex items-center hover:scale-105 transition-transform duration-200`}>
                               Learn More <ArrowRight className="w-4 h-4 ml-1" />
                             </button>
                           </div>
@@ -463,19 +463,19 @@ export default function NGOPage() {
                   </div>
 
                   {/* Enhanced Success Stories Carousel with Updated SVG Avatars */}
-                  <div className="mt-12 bg-gradient-to-br from-green-50 to-emerald-50 rounded-2xl p-8">
+                  <div className="mt-12 bg-gradient-to-br from-green-900/50 to-emerald-900/50 rounded-2xl p-8">
                     <div className="text-center mb-8">
-                      <div className="inline-flex items-center bg-green-100 text-green-600 px-4 py-2 rounded-full text-sm font-medium mb-4">
+                      <div className="inline-flex items-center bg-green-900/20 text-green-400 px-4 py-2 rounded-full text-sm font-medium mb-4">
                         <Star className="w-4 h-4 mr-2" />
                         Success Stories
                       </div>
-                      <h3 className="text-2xl font-bold text-gray-900 mb-2">Real People, Real Impact</h3>
-                      <p className="text-gray-600">Discover how our programs have transformed lives across India</p>
+                      <h3 className="text-2xl font-bold text-gray-200 mb-2">Real People, Real Impact</h3>
+                      <p className="text-gray-300">Discover how our programs have transformed lives across India</p>
                     </div>
                     
                     <div className="relative max-w-5xl mx-auto">
                       {/* Story Card with Updated SVG Avatars */}
-                      <div className="bg-white rounded-3xl shadow-2xl overflow-hidden transform transition-all duration-500 hover:shadow-3xl">
+                      <div className="bg-slate-800 rounded-3xl shadow-2xl overflow-hidden transform transition-all duration-500 hover:shadow-3xl">
                         <div className="flex flex-col lg:flex-row">
                           {/* Left Side - Profile & Business Images */}
                           <div className="lg:w-2/5 relative">
@@ -489,10 +489,10 @@ export default function NGOPage() {
                               {/* Profile Avatar Overlay */}
                               <div className="absolute bottom-6 left-1/2 -translate-x-1/2">
                                 <div className="relative">
-                                  <div className="rounded-full border-4 border-white shadow-lg bg-white" style={{width: 96, height: 96, display: 'flex', alignItems: 'center', justifyContent: 'center'}}>
+                                  <div className="rounded-full border-4 border-slate-700 shadow-lg bg-slate-900" style={{width: 96, height: 96, display: 'flex', alignItems: 'center', justifyContent: 'center'}}>
                                     {stories[currentStory].profileImage}
                                   </div>
-                                  <div className="absolute -bottom-1 -right-1 bg-green-500 w-6 h-6 rounded-full border-2 border-white flex items-center justify-center">
+                                  <div className="absolute -bottom-1 -right-1 bg-green-500 w-6 h-6 rounded-full border-2 border-slate-700 flex items-center justify-center">
                                     <CheckCircle className="w-3 h-3 text-white" />
                                   </div>
                                 </div>
@@ -506,53 +506,53 @@ export default function NGOPage() {
                               <div className="flex items-center space-x-4">
                                 {/* Profile Image for Mobile */}
                                 <div className="lg:hidden">
-                                  <div className="w-16 h-16 rounded-full border-3 border-green-200 shadow-md bg-white flex items-center justify-center">
+                                  <div className="w-16 h-16 rounded-full border-3 border-green-700 shadow-md bg-slate-900 flex items-center justify-center">
                                     {React.cloneElement(stories[currentStory].profileImage, { size: 64 })}
                                   </div>
                                 </div>
                                 <div>
-                                  <h4 className="text-2xl lg:text-3xl font-bold text-gray-900">{stories[currentStory].name}</h4>
-                                  <p className="text-green-600 font-medium flex items-center text-lg">
+                                  <h4 className="text-2xl lg:text-3xl font-bold text-gray-200">{stories[currentStory].name}</h4>
+                                  <p className="text-green-400 font-medium flex items-center text-lg">
                                     <MapPin className="w-5 h-5 mr-2" />
                                     {stories[currentStory].location}
                                   </p>
                                 </div>
                               </div>
-                              <button className="bg-blue-100 text-blue-600 p-3 rounded-full hover:bg-blue-200 transition-all duration-300 hover:scale-110 group">
+                              <button className="bg-blue-900/20 text-blue-400 p-3 rounded-full hover:bg-blue-900/40 transition-all duration-300 hover:scale-110 group">
                                 <Share2 className="w-5 h-5 group-hover:rotate-12 transition-transform duration-300" />
                               </button>
                             </div>
                             
-                            <div className="bg-gray-50 rounded-2xl p-6 mb-6">
-                              <p className="text-gray-700 text-lg leading-relaxed italic">
+                            <div className="bg-slate-900/50 rounded-2xl p-6 mb-6">
+                              <p className="text-gray-300 text-lg leading-relaxed italic">
                                 "{stories[currentStory].story}"
                               </p>
                             </div>
                             
                             <div className="flex flex-wrap gap-3 mb-6">
-                              <div className="bg-green-100 px-4 py-2 rounded-full">
-                                <span className="text-green-700 font-semibold text-sm">
+                              <div className="bg-green-900/20 px-4 py-2 rounded-full">
+                                <span className="text-green-400 font-semibold text-sm">
                                   {stories[currentStory].achievement}
                                 </span>
                               </div>
-                              <div className="bg-blue-100 px-4 py-2 rounded-full">
-                                <span className="text-blue-700 font-semibold text-sm flex items-center">
+                              <div className="bg-blue-900/20 px-4 py-2 rounded-full">
+                                <span className="text-blue-400 font-semibold text-sm flex items-center">
                                   <Calendar className="w-4 h-4 mr-2" />
                                   {stories[currentStory].duration}
                                 </span>
                               </div>
                             </div>
-
+                            
                             {/* Impact Metrics */}
-                            <div className="border-t border-gray-200 pt-6">
+                            <div className="border-t border-slate-700 pt-6">
                               <div className="grid grid-cols-2 gap-4 text-center">
                                 <div>
-                                  <div className="text-2xl font-bold text-green-600">₹2.5L+</div>
-                                  <div className="text-sm text-gray-600">Revenue Generated</div>
+                                  <div className="text-2xl font-bold text-green-400">₹2.5L+</div>
+                                  <div className="text-sm text-gray-300">Revenue Generated</div>
                                 </div>
                                 <div>
-                                  <div className="text-2xl font-bold text-blue-600">5+</div>
-                                  <div className="text-sm text-gray-600">Jobs Created</div>
+                                  <div className="text-2xl font-bold text-blue-400">5+</div>
+                                  <div className="text-sm text-gray-300">Jobs Created</div>
                                 </div>
                               </div>
                             </div>
@@ -564,9 +564,9 @@ export default function NGOPage() {
                       <div className="flex items-center justify-between mt-8">
                         <button
                           onClick={() => setCurrentStory((prev) => (prev - 1 + stories.length) % stories.length)}
-                          className="bg-white shadow-lg rounded-full p-4 hover:shadow-xl transition-all duration-300 hover:scale-110 transform hover:-translate-y-1 group"
+                          className="bg-slate-800 shadow-lg rounded-full p-4 hover:shadow-xl transition-all duration-300 hover:scale-110 transform hover:-translate-y-1 group"
                         >
-                          <ChevronLeft className="w-6 h-6 text-gray-600 group-hover:text-green-600" />
+                          <ChevronLeft className="w-6 h-6 text-gray-400 group-hover:text-green-400" />
                         </button>
                         
                         <div className="flex items-center space-x-6">
@@ -589,9 +589,9 @@ export default function NGOPage() {
                         
                         <button
                           onClick={() => setCurrentStory((prev) => (prev + 1) % stories.length)}
-                          className="bg-white shadow-lg rounded-full p-4 hover:shadow-xl transition-all duration-300 hover:scale-110 transform hover:-translate-y-1 group"
+                          className="bg-slate-800 shadow-lg rounded-full p-4 hover:shadow-xl transition-all duration-300 hover:scale-110 transform hover:-translate-y-1 group"
                         >
-                          <ChevronRight className="w-6 h-6 text-gray-600 group-hover:text-green-600" />
+                          <ChevronRight className="w-6 h-6 text-gray-400 group-hover:text-green-400" />
                         </button>
                       </div>
 
@@ -609,12 +609,12 @@ export default function NGOPage() {
                             <div className={`rounded-full border-3 object-cover transition-all duration-300 ${
                               index === currentStory 
                                 ? 'border-green-500 shadow-lg' 
-                                : 'border-gray-300 hover:border-green-400 opacity-70 hover:opacity-100'
+                                : 'border-slate-700 hover:border-green-400 opacity-70 hover:opacity-100'
                             }`}>
                               {story.thumb}
                             </div>
                             {index === currentStory && (
-                              <div className="absolute -bottom-1 -right-1 bg-green-500 w-4 h-4 rounded-full border-2 border-white">
+                              <div className="absolute -bottom-1 -right-1 bg-green-500 w-4 h-4 rounded-full border-2 border-slate-700">
                                 <div className="w-full h-full rounded-full bg-green-500 animate-ping"></div>
                               </div>
                             )}
@@ -630,10 +630,10 @@ export default function NGOPage() {
               {activeSection === 'partners' && (
                 <div className="space-y-6">
                   <div className="flex items-center space-x-3 mb-6">
-                    <div className="p-3 bg-purple-100 rounded-xl">
-                      <Building className="text-purple-600" size={24} />
+                    <div className="p-3 bg-purple-900/20 rounded-xl">
+                      <Building className="text-purple-400" size={24} />
                     </div>
-                    <h2 className="text-2xl font-bold text-gray-800">Partner Network Discovery</h2>
+                    <h2 className="text-2xl font-bold text-gray-200">Partner Network Discovery</h2>
                   </div>
 
                   <div className="mb-6">
@@ -644,22 +644,22 @@ export default function NGOPage() {
                         placeholder="Search partners by name or location..."
                         value={searchQuery}
                         onChange={(e) => setSearchQuery(e.target.value)}
-                        className="w-full pl-10 pr-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-purple-500 focus:border-transparent transition-all duration-200"
+                        className="w-full pl-10 pr-4 py-3 border border-slate-700 rounded-xl focus:ring-2 focus:ring-purple-500 focus:border-transparent transition-all duration-200 bg-slate-800 text-white"
                       />
                     </div>
                   </div>
 
                   <div className="grid md:grid-cols-2 gap-8">
                     {/* Interactive Map Section */}
-                    <div className="bg-gradient-to-br from-blue-100 to-purple-100 rounded-2xl p-4 min-h-[500px] relative overflow-hidden">
-                      <div className="bg-white rounded-xl h-full relative">
-                        <div className="p-4 border-b border-gray-200">
-                          <h3 className="text-lg font-bold text-gray-800 flex items-center">
-                            <MapPin className="w-5 h-5 mr-2 text-blue-600" />
+                    <div className="bg-gradient-to-br from-blue-900/50 to-purple-900/50 rounded-2xl p-4 min-h-[500px] relative overflow-hidden">
+                      <div className="bg-slate-800 rounded-xl h-full relative">
+                        <div className="p-4 border-b border-slate-700">
+                          <h3 className="text-lg font-bold text-gray-200 flex items-center">
+                            <MapPin className="w-5 h-5 mr-2 text-blue-400" />
                             Partner Locations Map
                           </h3>
                           {selectedPartner && (
-                            <p className="text-sm text-gray-600 mt-1">
+                            <p className="text-sm text-gray-300 mt-1">
                               Showing: {selectedPartner.name}
                             </p>
                           )}
@@ -668,17 +668,17 @@ export default function NGOPage() {
                         {/* Map Container */}
                         <div className="p-4 h-full">
                           {/* Simulated Interactive Map */}
-                          <div className="w-full h-full bg-gray-50 rounded-lg border-2 border-gray-200 relative overflow-hidden">
+                          <div className="w-full h-full bg-slate-900 rounded-lg border-2 border-slate-700 relative overflow-hidden">
                             {/* Map Background */}
-                            <div className="absolute inset-0 bg-gradient-to-br from-blue-50 to-green-50"></div>
+                            <div className="absolute inset-0 bg-gradient-to-br from-blue-900/20 to-green-900/20"></div>
                             
                             {/* Map Grid Lines */}
                             <div className="absolute inset-0 opacity-20">
                               {[...Array(10)].map((_, i) => (
-                                <div key={`h-${i}`} className="absolute w-full border-t border-gray-300" style={{top: `${i * 10}%`}}></div>
+                                <div key={`h-${i}`} className="absolute w-full border-t border-slate-700" style={{top: `${i * 10}%`}}></div>
                               ))}
                               {[...Array(10)].map((_, i) => (
-                                <div key={`v-${i}`} className="absolute h-full border-l border-gray-300" style={{left: `${i * 10}%`}}></div>
+                                <div key={`v-${i}`} className="absolute h-full border-l border-slate-700" style={{left: `${i * 10}%`}}></div>
                               ))}
                             </div>
                             
@@ -702,7 +702,7 @@ export default function NGOPage() {
                                 >
                                   {/* Marker Pin */}
                                   <div className={`relative cursor-pointer ${isSelected ? 'animate-bounce' : ''}`}>
-                                    <div className={`w-8 h-8 rounded-full border-4 border-white shadow-lg transition-all duration-300 ${
+                                    <div className={`w-8 h-8 rounded-full border-4 border-slate-700 shadow-lg transition-all duration-300 ${
                                       isSelected 
                                         ? 'bg-purple-600 ring-4 ring-purple-200' 
                                         : 'bg-blue-500 hover:bg-purple-500'
@@ -719,14 +719,14 @@ export default function NGOPage() {
                                     
                                     {/* Info Popup for Selected Partner */}
                                     {isSelected && (
-                                      <div className="absolute -top-16 left-1/2 transform -translate-x-1/2 bg-white rounded-lg shadow-xl border border-gray-200 p-3 min-w-48 z-30">
+                                      <div className="absolute -top-16 left-1/2 transform -translate-x-1/2 bg-slate-800 rounded-lg shadow-xl border border-slate-700 p-3 min-w-48 z-30">
                                         <div className="text-center">
-                                          <h4 className="font-bold text-sm text-gray-900">{partner.name}</h4>
-                                          <p className="text-xs text-purple-600 font-medium">{partner.type}</p>
-                                          <p className="text-xs text-gray-600 mt-1">{partner.location}</p>
+                                          <h4 className="font-bold text-sm text-gray-200">{partner.name}</h4>
+                                          <p className="text-xs text-purple-400 font-medium">{partner.type}</p>
+                                          <p className="text-xs text-gray-300 mt-1">{partner.location}</p>
                                         </div>
                                         {/* Popup Arrow */}
-                                        <div className="absolute top-full left-1/2 transform -translate-x-1/2 w-0 h-0 border-l-4 border-r-4 border-t-4 border-transparent border-t-white"></div>
+                                        <div className="absolute top-full left-1/2 transform -translate-x-1/2 w-0 h-0 border-l-4 border-r-4 border-t-4 border-transparent border-t-slate-800"></div>
                                       </div>
                                     )}
                                   </div>
@@ -740,56 +740,32 @@ export default function NGOPage() {
                             })}
                             
                             {/* Map Legend */}
-                            <div className="absolute bottom-4 left-4 bg-white rounded-lg shadow-lg p-3 border border-gray-200">
-                              <h4 className="text-sm font-bold text-gray-800 mb-2">Legend</h4>
+                            <div className="absolute bottom-4 left-4 bg-slate-800 rounded-lg shadow-lg p-3 border border-slate-700">
+                              <h4 className="text-sm font-bold text-gray-200 mb-2">Legend</h4>
                               <div className="space-y-1 text-xs">
                                 <div className="flex items-center">
                                   <div className="w-3 h-3 bg-blue-500 rounded-full mr-2"></div>
-                                  <span className="text-gray-600">Available Partners</span>
+                                  <span className="text-gray-300">Available Partners</span>
                                 </div>
                                 <div className="flex items-center">
                                   <div className="w-3 h-3 bg-purple-600 rounded-full mr-2"></div>
-                                  <span className="text-gray-600">Selected Partner</span>
+                                  <span className="text-gray-300">Selected Partner</span>
                                 </div>
                               </div>
-                            </div>
-                            
-                            {/* Zoom Controls */}
-                            <div className="absolute top-4 right-4 bg-white rounded-lg shadow-lg border border-gray-200">
-                              <button className="block p-2 hover:bg-gray-50 transition-colors duration-200 border-b border-gray-200">
-                                <span className="text-lg font-bold text-gray-600">+</span>
-                              </button>
-                              <button className="block p-2 hover:bg-gray-50 transition-colors duration-200">
-                                <span className="text-lg font-bold text-gray-600">−</span>
-                              </button>
                             </div>
                           </div>
                         </div>
                       </div>
                     </div>
 
-                    {/* Partner Cards Section */}
+                    {/* Partner List Section */}
                     <div className="space-y-4">
                       {filteredPartners.map((partner) => (
-                        <div
-                          key={partner.id}
-                          className={`border-2 rounded-2xl p-6 cursor-pointer transition-all duration-300 hover:shadow-lg hover:scale-102 ${
-                            selectedPartner?.id === partner.id 
-                              ? 'border-purple-500 shadow-xl bg-purple-50' 
-                              : 'border-gray-200 hover:border-purple-300'
-                          }`}
-                        >
-                          <div className="flex justify-between items-start mb-4">
-                            <div>
-                              <h3 className="font-bold text-lg">{partner.name}</h3>
-                              <p className="text-purple-600 font-medium">{partner.type}</p>
-                            </div>
-                            <div className="bg-purple-100 rounded-full p-2">
-                              <Building className="w-5 h-5 text-purple-600" />
-                            </div>
-                          </div>
-
-                          <div className="grid grid-cols-2 gap-4 text-sm text-gray-600 mb-4">
+                        <div key={partner.id} className="bg-slate-800/50 rounded-2xl p-6 border border-slate-700 shadow-lg hover:shadow-xl transition-all duration-300 hover:scale-102">
+                          <h3 className="text-xl font-bold text-gray-200 mb-2">{partner.name}</h3>
+                          <p className="text-purple-400 text-sm font-medium mb-3">{partner.type}</p>
+                          <p className="text-gray-300 text-sm mb-4">{partner.focus}</p>
+                          <div className="flex flex-wrap gap-x-4 gap-y-2 text-gray-300 text-sm mb-6">
                             <div className="flex items-center">
                               <MapPin className="w-4 h-4 mr-2" />
                               {partner.location}
@@ -812,7 +788,7 @@ export default function NGOPage() {
                             onClick={() => setSelectedPartner(partner)}
                             className={`w-full py-3 rounded-xl transition-all duration-300 hover:scale-105 font-medium ${
                               selectedPartner?.id === partner.id
-                                ? 'bg-purple-700 text-white'
+                                ? 'bg-purple-700 text-white' 
                                 : 'bg-purple-600 text-white hover:bg-purple-700'
                             }`}
                           >
@@ -829,10 +805,10 @@ export default function NGOPage() {
               {activeSection === 'tracker' && (
                 <div className="space-y-6">
                   <div className="flex items-center space-x-3 mb-6">
-                    <div className="p-3 bg-green-100 rounded-xl">
-                      <BarChart3 className="text-green-600" size={24} />
+                    <div className="p-3 bg-green-900/20 rounded-xl">
+                      <BarChart3 className="text-green-400" size={24} />
                     </div>
-                    <h2 className="text-2xl font-bold text-gray-800">Application Progress Tracker</h2>
+                    <h2 className="text-2xl font-bold text-gray-200">Application Progress Tracker</h2>
                   </div>
 
                   <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-8">
@@ -842,42 +818,42 @@ export default function NGOPage() {
                       { label: "Approved", value: "1,924", color: "purple" },
                       { label: "Avg. Time", value: "14 days", color: "orange" }
                     ].map((metric, index) => (
-                      <div key={index} className="bg-gray-50 rounded-2xl p-4 text-center hover:bg-gray-100 transition-colors duration-300">
-                        <div className={`text-xl font-bold text-${metric.color}-600 mb-1`}>{metric.value}</div>
-                        <div className="text-gray-600 text-sm">{metric.label}</div>
+                      <div key={index} className="bg-slate-800/50 rounded-2xl p-4 text-center hover:bg-slate-700 transition-colors duration-300">
+                        <div className={`text-xl font-bold text-${metric.color}-400 mb-1`}>{metric.value}</div>
+                        <div className="text-gray-300 text-sm">{metric.label}</div>
                       </div>
                     ))}
                   </div>
 
                   <div className="space-y-4">
                     {applications.map((app, index) => (
-                      <div key={index} className="bg-gray-50 rounded-2xl p-6 hover:bg-gray-100 transition-all duration-300 hover:scale-102">
+                      <div key={index} className="bg-slate-800/50 rounded-2xl p-6 hover:bg-slate-700 transition-all duration-300 hover:scale-102">
                         <div className="flex justify-between items-start mb-4">
                           <div>
-                            <h3 className="font-semibold text-lg">{app.program}</h3>
-                            <p className="text-gray-600">Applicant: {app.applicant}</p>
+                            <h3 className="font-semibold text-lg text-gray-200">{app.program}</h3>
+                            <p className="text-gray-300">Applicant: {app.applicant}</p>
                           </div>
                           <span className={`px-3 py-1 rounded-full text-sm font-medium ${
-                            app.status === 'Completed' ? 'bg-green-100 text-green-700' : 'bg-blue-100 text-blue-700'}`}>
+                            app.status === 'Completed' ? 'bg-green-900/20 text-green-400' : 'bg-blue-900/20 text-blue-400'}`}>
                             {app.status}
                           </span>
                         </div>
 
                         <div className="mb-4">
                           <div className="flex justify-between text-sm mb-2">
-                            <span className="text-gray-700">Progress: {app.stage}</span>
-                            <span className="font-medium">{app.progress}%</span>
+                            <span className="text-gray-300">Progress: {app.stage}</span>
+                            <span className="font-medium text-gray-200">{app.progress}%</span>
                           </div>
-                          <div className="w-full bg-gray-200 rounded-full h-3">
+                          <div className="w-full bg-slate-700 rounded-full h-3">
                             <div className="bg-blue-600 h-3 rounded-full transition-all duration-500" style={{ width: `${app.progress}%` }}></div>
                           </div>
                         </div>
 
                         <div className="flex items-center justify-between">
-                          <span className="text-sm text-gray-600">
+                          <span className="text-sm text-gray-300">
                             Next Step: <span className="font-medium">{app.nextStep}</span>
                           </span>
-                          <button className="text-blue-600 text-sm font-medium flex items-center hover:scale-105 transition-transform duration-200">
+                          <button className="text-blue-400 text-sm font-medium flex items-center hover:scale-105 transition-transform duration-200">
                             View Details <ArrowRight className="w-4 h-4 ml-1" />
                           </button>
                         </div>
@@ -891,42 +867,42 @@ export default function NGOPage() {
               {activeSection === 'resources' && (
                 <div className="space-y-8">
                   <div className="flex items-center space-x-3 mb-6">
-                    <div className="p-3 bg-orange-100 rounded-xl">
-                      <BookOpen className="text-orange-600" size={24} />
+                    <div className="p-3 bg-orange-900/20 rounded-xl">
+                      <BookOpen className="text-orange-400" size={24} />
                     </div>
-                    <h2 className="text-2xl font-bold text-gray-800">Learning Hub</h2>
+                    <h2 className="text-2xl font-bold text-gray-200">Learning Hub</h2>
                   </div>
 
                   {/* Financial Literacy Resources Section */}
                   <div className="space-y-6">
                     <div className="flex items-center space-x-3 mb-4">
-                      <div className="p-2 bg-orange-50 rounded-lg">
-                        <FileText className="text-orange-600" size={20} />
+                      <div className="p-2 bg-orange-900/10 rounded-lg">
+                        <FileText className="text-orange-400" size={20} />
                       </div>
-                      <h3 className="text-xl font-bold text-gray-800">Financial Literacy Resources</h3>
+                      <h3 className="text-xl font-bold text-gray-200">Financial Literacy Resources</h3>
                     </div>
 
                     <div className="grid md:grid-cols-2 gap-6">
                       {resources.map((resource, index) => {
                         const IconComponent = resource.icon;
                         return (
-                          <div key={index} className="border-2 border-gray-200 rounded-2xl p-6 hover:border-orange-400 transition-all duration-300 hover:shadow-lg hover:scale-105">
+                          <div key={index} className="border-2 border-slate-700 rounded-2xl p-6 hover:border-orange-700 transition-all duration-300 hover:shadow-lg hover:scale-105 bg-slate-800/50">
                             <div className="flex justify-between items-start mb-4">
-                              <div className="bg-orange-100 rounded-xl p-3">
-                                <IconComponent className="w-6 h-6 text-orange-600" />
+                              <div className="bg-orange-900/20 rounded-xl p-3">
+                                <IconComponent className="w-6 h-6 text-orange-400" />
                               </div>
-                              <span className="bg-blue-100 text-blue-700 px-2 py-1 rounded-full text-xs font-medium">{resource.type}</span>
+                              <span className="bg-blue-900/20 text-blue-400 px-2 py-1 rounded-full text-xs font-medium">{resource.type}</span>
                             </div>
 
-                            <h4 className="font-semibold mb-2">{resource.title}</h4>
-                            <p className="text-gray-600 text-sm mb-4">{resource.category}</p>
+                            <h4 className="font-semibold text-gray-200 mb-2">{resource.title}</h4>
+                            <p className="text-gray-300 text-sm mb-4">{resource.category}</p>
 
                             <div className="flex justify-between items-center mb-4">
                               <div className="flex items-center space-x-2">
                                 <Star className="w-4 h-4 text-yellow-400 fill-current" />
-                                <span className="text-sm font-medium">{resource.rating}</span>
+                                <span className="text-sm font-medium text-gray-300">{resource.rating}</span>
                               </div>
-                              <span className="text-sm text-gray-500">{resource.downloads} downloads</span>
+                              <span className="text-sm text-gray-400">{resource.downloads} downloads</span>
                             </div>
 
                             <button className="w-full bg-orange-600 text-white py-2 rounded-xl hover:bg-orange-700 transition-colors duration-300 text-sm font-medium">
@@ -939,25 +915,25 @@ export default function NGOPage() {
 
                     {/* Add More Resources Button */}
                     <div className="text-center mt-6">
-                      <button className="bg-orange-100 text-orange-600 px-6 py-3 rounded-xl hover:bg-orange-200 transition-colors duration-300 font-medium">
+                      <button className="bg-orange-900/20 text-orange-400 px-6 py-3 rounded-xl hover:bg-orange-900/40 transition-colors duration-300 font-medium">
                         View All Resources
                       </button>
                     </div>
                   </div>
 
                   {/* Community Feedback Section - Separate Section */}
-                  <div className="space-y-6 border-t border-gray-200 pt-8">
+                  <div className="space-y-6 border-t border-slate-700 pt-8">
                     <div className="flex items-center space-x-3 mb-4">
-                      <div className="p-2 bg-blue-50 rounded-lg">
-                        <MessageCircle className="text-blue-600" size={20} />
+                      <div className="p-2 bg-blue-900/10 rounded-lg">
+                        <MessageCircle className="text-blue-400" size={20} />
                       </div>
-                      <h3 className="text-xl font-bold text-gray-800">Community Feedback & Discussion</h3>
+                      <h3 className="text-xl font-bold text-gray-200">Community Feedback & Discussion</h3>
                     </div>
 
-                    <div className="bg-gray-50 rounded-2xl p-6">
+                    <div className="bg-slate-800/50 rounded-2xl p-6">
                       <div className="flex justify-between items-center mb-6">
-                        <h4 className="font-bold text-lg flex items-center">
-                          <MessageCircle className="w-5 h-5 mr-2 text-blue-600" />
+                        <h4 className="font-bold text-lg text-gray-200 flex items-center">
+                          <MessageCircle className="w-5 h-5 mr-2 text-blue-400" />
                           Recent Community Reviews
                         </h4>
                         <button className="bg-blue-600 text-white px-4 py-2 rounded-xl hover:bg-blue-700 transition-colors duration-300 font-medium">
@@ -966,116 +942,71 @@ export default function NGOPage() {
                       </div>
 
                       <div className="grid md:grid-cols-2 gap-6">
-                        <div className="bg-white rounded-xl p-4 shadow-sm">
+                        <div className="bg-slate-900/50 rounded-xl p-4 shadow-sm">
                           <div className="flex items-center justify-between mb-3">
                             <div className="flex items-center">
-                              <div className="bg-blue-100 rounded-full p-2 mr-3">
-                                <User className="w-4 h-4 text-blue-600" />
+                              <div className="bg-blue-900/20 rounded-full p-2 mr-3">
+                                <User className="w-4 h-4 text-blue-400" />
                               </div>
                               <div>
-                                <p className="font-medium">Priya S.</p>
+                                <p className="font-medium text-gray-200">Priya S.</p>
                                 <div className="flex">{[...Array(5)].map((_, i) => <Star key={i} className="w-3 h-3 text-yellow-400 fill-current" />)}</div>
                               </div>
                             </div>
-                            <span className="text-xs text-gray-500">2 days ago</span>
+                            <span className="text-xs text-gray-400">2 days ago</span>
                           </div>
-                          <p className="text-sm text-gray-700 mb-3">The credit guide helped improve my score by 150 points! Highly recommend the step-by-step approach.</p>
+                          <p className="text-sm text-gray-300 mb-3">The credit guide helped improve my score by 150 points! Highly recommend the step-by-step approach.</p>
                           <div className="flex justify-between items-center">
-                            <button className="flex items-center text-gray-500 hover:text-blue-600 text-sm transition-colors duration-300">
+                            <button className="flex items-center text-gray-400 hover:text-blue-400 text-sm transition-colors duration-300">
                               <ThumbsUp className="w-4 h-4 mr-1" />24
                             </button>
-                            <span className="text-xs text-blue-600 font-medium">Credit Building Guide</span>
+                            <span className="text-xs text-blue-400 font-medium">Credit Building Guide</span>
                           </div>
                         </div>
 
-                        <div className="bg-white rounded-xl p-4 shadow-sm">
+                        <div className="bg-slate-900/50 rounded-xl p-4 shadow-sm">
                           <div className="flex items-center justify-between mb-3">
                             <div className="flex items-center">
-                              <div className="bg-green-100 rounded-full p-2 mr-3">
-                                <User className="w-4 h-4 text-green-600" />
+                              <div className="bg-green-900/20 rounded-full p-2 mr-3">
+                                <User className="w-4 h-4 text-green-400" />
                               </div>
                               <div>
-                                <p className="font-medium">Ravi K.</p>
+                                <p className="font-medium text-gray-200">Ravi K.</p>
                                 <div className="flex">{[...Array(4)].map((_, i) => <Star key={i} className="w-3 h-3 text-yellow-400 fill-current" />)}</div>
                               </div>
                             </div>
-                            <span className="text-xs text-gray-500">1 week ago</span>
+                            <span className="text-xs text-gray-400">5 days ago</span>
                           </div>
-                          <p className="text-sm text-gray-700 mb-3">Very practical resources. Would love more video content for better understanding.</p>
+                          <p className="text-sm text-gray-300 mb-3">The financial literacy workshop was incredibly insightful. Gained practical tips!</p>
                           <div className="flex justify-between items-center">
-                            <button className="flex items-center text-gray-500 hover:text-blue-600 text-sm transition-colors duration-300">
+                            <button className="flex items-center text-gray-400 hover:text-green-400 text-sm transition-colors duration-300">
                               <ThumbsUp className="w-4 h-4 mr-1" />18
                             </button>
-                            <span className="text-xs text-green-600 font-medium">Digital Banking Basics</span>
+                            <span className="text-xs text-green-400 font-medium">Financial Literacy Workshop</span>
                           </div>
                         </div>
 
-                        <div className="bg-white rounded-xl p-4 shadow-sm">
+                        <div className="bg-slate-900/50 rounded-xl p-4 shadow-sm">
                           <div className="flex items-center justify-between mb-3">
                             <div className="flex items-center">
-                              <div className="bg-purple-100 rounded-full p-2 mr-3">
-                                <User className="w-4 h-4 text-purple-600" />
+                              <div className="bg-purple-900/20 rounded-full p-2 mr-3">
+                                <User className="w-4 h-4 text-purple-400" />
                               </div>
                               <div>
-                                <p className="font-medium">Sunita M.</p>
+                                <p className="font-medium text-gray-200">Sunita M.</p>
                                 <div className="flex">{[...Array(5)].map((_, i) => <Star key={i} className="w-3 h-3 text-yellow-400 fill-current" />)}</div>
                               </div>
                             </div>
-                            <span className="text-xs text-gray-500">2 weeks ago</span>
+                            <span className="text-xs text-gray-400">2 weeks ago</span>
                           </div>
-                          <p className="text-sm text-gray-700 mb-3">The budgeting worksheet is exactly what I needed. Thank you for making it so easy to use!</p>
+                          <p className="text-sm text-gray-300 mb-3">The budgeting worksheet is exactly what I needed. Thank you for making it so easy to use!</p>
                           <div className="flex justify-between items-center">
-                            <button className="flex items-center text-gray-500 hover:text-blue-600 text-sm transition-colors duration-300">
+                            <button className="flex items-center text-gray-400 hover:text-blue-400 text-sm transition-colors duration-300">
                               <ThumbsUp className="w-4 h-4 mr-1" />31
                             </button>
-                            <span className="text-xs text-purple-600 font-medium">Budgeting Template</span>
+                            <span className="text-xs text-purple-400 font-medium">Budgeting Template</span>
                           </div>
                         </div>
-
-                        <div className="bg-white rounded-xl p-4 shadow-sm">
-                          <div className="flex items-center justify-between mb-3">
-                            <div className="flex items-center">
-                              <div className="bg-orange-100 rounded-full p-2 mr-3">
-                                <User className="w-4 h-4 text-orange-600" />
-                              </div>
-                              <div>
-                                <p className="font-medium">Amit P.</p>
-                                <div className="flex">{[...Array(4)].map((_, i) => <Star key={i} className="w-3 h-3 text-yellow-400 fill-current" />)}</div>
-                              </div>
-                            </div>
-                            <span className="text-xs text-gray-500">3 weeks ago</span>
-                          </div>
-                          <p className="text-sm text-gray-700 mb-3">Great resource collection! The loan application guide saved me a lot of time and confusion.</p>
-                          <div className="flex justify-between items-center">
-                            <button className="flex items-center text-gray-500 hover:text-blue-600 text-sm transition-colors duration-300">
-                              <ThumbsUp className="w-4 h-4 mr-1" />15
-                            </button>
-                            <span className="text-xs text-orange-600 font-medium">Business Loan Guide</span>
-                          </div>
-                        </div>
-                      </div>
-
-                      {/* Community Stats */}
-                      <div className="grid grid-cols-3 gap-4 mt-6 pt-6 border-t border-gray-200">
-                        <div className="text-center">
-                          <div className="text-2xl font-bold text-blue-600">124</div>
-                          <div className="text-sm text-gray-600">Total Reviews</div>
-                        </div>
-                        <div className="text-center">
-                          <div className="text-2xl font-bold text-green-600">4.7</div>
-                          <div className="text-sm text-gray-600">Average Rating</div>
-                        </div>
-                        <div className="text-center">
-                          <div className="text-2xl font-bold text-purple-600">89%</div>
-                          <div className="text-sm text-gray-600">Helpful Rate</div>
-                        </div>
-                      </div>
-
-                      {/* View More Button */}
-                      <div className="text-center mt-6">
-                        <button className="bg-blue-100 text-blue-600 px-6 py-3 rounded-xl hover:bg-blue-200 transition-colors duration-300 font-medium">
-                          View All Community Feedback
-                        </button>
                       </div>
                     </div>
                   </div>
@@ -1083,66 +1014,157 @@ export default function NGOPage() {
               )}
             </div>
           </div>
-
-          {/* Contact Section */}
-          <div className="mt-8 bg-gradient-to-r from-blue-600 via-indigo-700 to-purple-800 text-white rounded-3xl p-8 text-center">
-            <div className="bg-white bg-opacity-20 backdrop-blur-sm rounded-full p-4 w-16 h-16 mx-auto mb-6">
-              <Heart className="w-8 h-8 text-white" />
-            </div>
-            <h2 className="text-3xl font-bold mb-4">Join Our Mission</h2>
-            <p className="text-xl text-blue-100 mb-8 max-w-2xl mx-auto">
-              Partner with us to expand financial inclusion and create opportunities for underserved communities
-            </p>
-            
-            <div className="flex flex-col sm:flex-row justify-center items-center space-y-4 sm:space-y-0 sm:space-x-8 mb-8">
-              <div className="flex items-center text-blue-100 hover:text-white transition-colors duration-300 cursor-pointer">
-                <Mail className="w-5 h-5 mr-2" />
-                partnerships@securebank.com
-              </div>
-              <div className="flex items-center text-blue-100 hover:text-white transition-colors duration-300 cursor-pointer">
-                <Phone className="w-5 h-5 mr-2" />
-                +91 98765 43210
-              </div>
-            </div>
-            
-            <button className="bg-white text-blue-600 px-8 py-3 rounded-xl font-semibold hover:bg-blue-50 transition-all duration-300 hover:scale-105 shadow-lg">
-              Start Partnership Today
-            </button>
-          </div>
-
-          {/* Share Story Modal */}
-          {showShareModal && (
-            <div className="fixed inset-0 bg-black bg-opacity-50 backdrop-blur-sm flex items-center justify-center p-4 z-50">
-              <div className="bg-white rounded-2xl max-w-md w-full p-6 transform transition-all duration-300 scale-100">
-                <div className="text-center mb-6">
-                  <div className="bg-green-100 rounded-full p-4 w-16 h-16 mx-auto mb-4">
-                    <Camera className="w-8 h-8 text-green-600" />
-                  </div>
-                  <h3 className="text-xl font-bold text-gray-900 mb-2">Share Your Success Story</h3>
-                  <p className="text-gray-600">Help inspire others by sharing your journey with photos.</p>
-                </div>
-                
-                <div className="space-y-4">
-                  <div className="border-2 border-dashed border-gray-300 rounded-xl p-6 text-center hover:border-green-400 transition-colors duration-300">
-                    <Upload className="w-8 h-8 text-gray-400 mx-auto mb-2" />
-                    <p className="text-sm text-gray-600">Upload your profile photo</p>
-                  </div>
-                  
-                  <button className="w-full bg-green-600 text-white py-3 rounded-xl hover:bg-green-700 transition-colors duration-300 font-medium">
-                    Upload Story & Photos
-                  </button>
-                  <button 
-                    onClick={() => setShowShareModal(false)}
-                    className="w-full border border-gray-300 text-gray-700 py-3 rounded-xl hover:bg-gray-50 transition-colors duration-300"
-                  >
-                    Cancel
-                  </button>
-                </div>
-              </div>
-            </div>
-          )}
         </div>
       </div>
+      {/* Share Story Modal */}
+      {showShareModal && (
+        <div className="fixed inset-0 bg-black bg-opacity-75 flex items-center justify-center p-4 z-50">
+          <div className="bg-slate-900 rounded-lg shadow-xl p-8 w-full max-w-lg border border-blue-700 relative">
+            <button
+              onClick={() => setShowShareModal(false)}
+              className="absolute top-4 right-4 text-gray-400 hover:text-gray-200 transition-colors duration-300"
+            >
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                className="h-6 w-6"
+                fill="none"
+                viewBox="0 0 24 24"
+                stroke="currentColor"
+              >
+                <path
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  strokeWidth={2}
+                  d="M6 18L18 6M6 6l12 12"
+                />
+              </svg>
+            </button>
+            <h2 className="text-3xl font-bold text-blue-300 mb-6 text-center">Share Your Story</h2>
+            <p className="text-gray-300 mb-6 text-center">
+              We'd love to hear how EduNurture has made a difference in your life.
+            </p>
+            <form className="space-y-4">
+              <div>
+                <label htmlFor="name" className="block text-gray-200 text-sm font-semibold mb-2">Your Name</label>
+                <input
+                  type="text"
+                  id="name"
+                  className="w-full p-3 rounded-md bg-slate-800 text-white border border-slate-700 focus:ring focus:ring-blue-500 focus:border-blue-500"
+                  placeholder="Enter your name"
+                />
+              </div>
+              <div>
+                <label htmlFor="email" className="block text-gray-200 text-sm font-semibold mb-2">Your Email</label>
+                <input
+                  type="email"
+                  id="email"
+                  className="w-full p-3 rounded-md bg-slate-800 text-white border border-slate-700 focus:ring focus:ring-blue-500 focus:border-blue-500"
+                  placeholder="Enter your email"
+                />
+              </div>
+              <div>
+                <label htmlFor="story" className="block text-gray-200 text-sm font-semibold mb-2">Your Story</label>
+                <textarea
+                  id="story"
+                  rows="6"
+                  className="w-full p-3 rounded-md bg-slate-800 text-white border border-slate-700 focus:ring focus:ring-blue-500 focus:border-blue-500"
+                  placeholder="Share your inspiring journey..."
+                ></textarea>
+              </div>
+              <button
+                type="submit"
+                className="w-full bg-gradient-to-r from-blue-600 to-purple-700 text-white py-3 px-6 rounded-lg text-lg font-semibold hover:from-blue-700 hover:to-purple-800 transition duration-300 shadow-lg"
+              >
+                Submit Story
+              </button>
+            </form>
+          </div>
+        </div>
+      )}
+      {/* Partner Modal */}
+      {selectedPartner && (
+        <div className="fixed inset-0 bg-black bg-opacity-75 flex items-center justify-center p-4 z-50">
+          <div className="bg-slate-900 rounded-lg shadow-xl p-8 w-full max-w-2xl border border-purple-700 relative">
+            <button
+              onClick={() => setSelectedPartner(null)}
+              className="absolute top-4 right-4 text-gray-400 hover:text-gray-200 transition-colors duration-300"
+            >
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                className="h-6 w-6"
+                fill="none"
+                viewBox="0 0 24 24"
+                stroke="currentColor"
+              >
+                <path
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  strokeWidth={2}
+                  d="M6 18L18 6M6 6l12 12"
+                />
+              </svg>
+            </button>
+            <h2 className="text-3xl font-bold text-purple-300 mb-6 text-center">Partner Details</h2>
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+              <div className="space-y-4">
+                <h3 className="text-xl font-semibold text-gray-200">{selectedPartner.name}</h3>
+                <p className="text-purple-400 font-medium">{selectedPartner.type}</p>
+                <p className="text-gray-300">{selectedPartner.focus}</p>
+                <div className="flex items-center text-gray-300">
+                  <MapPin className="w-5 h-5 mr-2" />
+                  {selectedPartner.location}
+                </div>
+                <div className="flex items-center text-gray-300">
+                  <Calendar className="w-5 h-5 mr-2" />
+                  Established: {selectedPartner.established}
+                </div>
+                <div className="flex items-center text-gray-300">
+                  <Users className="w-5 h-5 mr-2" />
+                  Beneficiaries: {selectedPartner.beneficiaries}
+                </div>
+              </div>
+              <div>
+                <h3 className="text-xl font-semibold text-gray-200 mb-4">Contact & Links</h3>
+                <ul className="space-y-3">
+                  <li>
+                    <a href="#" className="flex items-center text-blue-400 hover:text-blue-300 transition duration-300">
+                      <Globe className="w-5 h-5 mr-2" />
+                      Visit Website
+                      <ExternalLink className="w-4 h-4 ml-1" />
+                    </a>
+                  </li>
+                  <li>
+                    <a href="#" className="flex items-center text-blue-400 hover:text-blue-300 transition duration-300">
+                      <Mail className="w-5 h-5 mr-2" />
+                      Email Partner
+                    </a>
+                  </li>
+                  <li>
+                    <a href="#" className="flex items-center text-blue-400 hover:text-blue-300 transition duration-300">
+                      <Phone className="w-5 h-5 mr-2" />
+                      Call Partner
+                    </a>
+                  </li>
+                </ul>
+                <h3 className="text-xl font-semibold text-gray-200 mt-6 mb-4">Impact Highlights</h3>
+                <ul className="space-y-2 text-gray-300">
+                  <li className="flex items-center"><CheckCircle className="w-4 h-4 mr-2 text-green-400" />Launched 5 new programs</li>
+                  <li className="flex items-center"><CheckCircle className="w-4 h-4 mr-2 text-green-400" />Reached 10,000+ individuals</li>
+                  <li className="flex items-center"><CheckCircle className="w-4 h-4 mr-2 text-green-400" />Secured $1M in funding</li>
+                </ul>
+              </div>
+            </div>
+            <div className="mt-8 text-center">
+              <button
+                onClick={() => setSelectedPartner(null)}
+                className="bg-gradient-to-r from-purple-600 to-blue-700 text-white py-3 px-8 rounded-lg text-lg font-semibold hover:from-purple-700 hover:to-blue-800 transition duration-300 shadow-lg"
+              >
+                Close
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 }
