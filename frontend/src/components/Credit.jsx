@@ -289,7 +289,7 @@ const AICreditScoreInsights = () => {
                 <Brain className="text-white" size={32} />
               </div>
               <h1 className="text-4xl font-bold bg-gradient-to-r from-blue-400 to-purple-400 bg-clip-text text-transparent">
-                AI Credit Score Insights
+                Unnati Index Insights
               </h1>
             </div>
             <p className="text-gray-300 text-lg">Advanced alternative credit scoring powered by AI</p>
@@ -322,7 +322,7 @@ const AICreditScoreInsights = () => {
               {/* Main Score Card */}
               <div className="lg:col-span-3 bg-gradient-to-br from-slate-800 to-slate-900 rounded-3xl p-8 shadow-2xl border border-slate-700">
                 <div className="text-center mb-8">
-                  <h2 className="text-2xl font-bold mb-4 text-gray-200">Your AI Credit Score</h2>
+                  <h2 className="text-2xl font-bold mb-4 text-gray-200">Your Unnati Index</h2>
                   <div className="relative">
                     <div className="text-6xl font-bold text-transparent bg-gradient-to-r from-green-400 to-blue-500 bg-clip-text mb-2">
                       {animatedScore.toFixed(2)}

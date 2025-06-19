@@ -88,7 +88,7 @@ export default function Login() {
             <div className="inline-flex items-center justify-center w-16 h-16 bg-blue-600 rounded-full mb-4 shadow-lg">
               <Shield className="w-8 h-8 text-white" />
             </div>
-            <h1 className="text-3xl font-bold text-white mb-2">SecureBank</h1>
+            <h1 className="text-3xl font-bold text-white mb-2">Grameen Support</h1>
             <p className="text-blue-200">Secure Online Banking</p>
           </div>
 
@@ -223,7 +223,7 @@ export default function Login() {
               <a href="#" className="hover:text-white transition-colors">Help Center</a>
             </div>
             <p className="text-xs text-blue-300">
-              © 2025 SecureBank. All rights reserved. FDIC Insured.
+              © 2025 Grameen Support. All rights reserved. FDIC Insured.
             </p>
           </div>
         </div>

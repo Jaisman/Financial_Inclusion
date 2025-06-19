@@ -111,7 +111,7 @@ const FinancialQuizPage = ({ userData }) => {
   };
 
   const handleShare = () => {
-    const shareText = `I scored ${score.total}/80 on SecureBank's Financial Health Quiz! Check your financial health at securebank.com/quiz`;
+    const shareText = `I scored ${score.total}/80 on Grameen Support Financial Health Quiz! Check your financial health at GrameenSupport.com/quiz`;
     if (navigator.share) {
       navigator.share({ 
         title: 'My Financial Health Score', 

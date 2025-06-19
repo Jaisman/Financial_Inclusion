@@ -47,7 +47,7 @@ const Navbar = () => {
               <Shield className="text-white" size={24} />
             </div>
             <span className="text-xl font-bold bg-gradient-to-r from-blue-400 to-purple-400 bg-clip-text text-transparent">
-              SecureBank
+              Grameen Support
             </span>
           </Link>
 

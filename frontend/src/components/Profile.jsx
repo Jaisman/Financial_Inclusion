@@ -248,7 +248,7 @@ const ProfilePage = () => {
               <User className="text-white" size={32} />
             </div>
             <h1 className="text-4xl font-bold bg-gradient-to-r from-blue-400 to-purple-400 bg-clip-text text-transparent">
-              Your Profile 👤
+              Sushmita Devi 👤
             </h1>
           </div>
           <p className="text-gray-400">Complete your profile for better financial inclusion</p>

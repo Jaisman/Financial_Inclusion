@@ -50,7 +50,7 @@ FEATURE_DESCRIPTIONS = {
 # }
 
 USER_INFO = {
-    "name": "Sushma Devi",
+    "name": "Sushmita Devi",
     "age": 35,
     "location": "Punjab, India",
     "family_status": "Widow with two children",
